@@ -124,7 +124,7 @@ export default function RegisterPage() {
                 type="text"
                 {...register("fullName")}
                 placeholder="Juan Dela Cruz"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-2 border border-gray-300 text-gray-800 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                 disabled={isLoading}
               />
               {errors.fullName && (
@@ -140,14 +140,14 @@ export default function RegisterPage() {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700 mb-2"
               >
-                Institutional Email
+                Email
               </label>
               <input
                 id="email"
                 type="email"
                 {...register("email")}
                 placeholder="your.name@carsu.edu.ph"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-2 border border-gray-300 text-gray-800 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                 disabled={isLoading}
               />
               {errors.email && (
@@ -170,7 +170,7 @@ export default function RegisterPage() {
                 type="text"
                 {...register("schoolId")}
                 placeholder="2024-1234"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-2 border border-gray-300 text-gray-800 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                 disabled={isLoading}
               />
               {errors.schoolId && (
@@ -194,7 +194,9 @@ export default function RegisterPage() {
                     className="sr-only"
                     disabled={isLoading}
                   />
-                  <span className="text-sm font-medium">Student</span>
+                  <span className="text-sm font-medium text-gray-800">
+                    Student
+                  </span>
                 </label>
                 <label className="relative flex items-center justify-center p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50">
                   <input
@@ -204,7 +206,9 @@ export default function RegisterPage() {
                     className="sr-only"
                     disabled={isLoading}
                   />
-                  <span className="text-sm font-medium">PSG Member</span>
+                  <span className="text-sm font-medium text-gray-800">
+                    PSG Member
+                  </span>
                 </label>
               </div>
               {errors.role && (
@@ -228,7 +232,7 @@ export default function RegisterPage() {
                   type={showPassword ? "text" : "password"}
                   {...register("password")}
                   placeholder="Create a strong password"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition pr-12"
+                  className="w-full px-4 py-2 border border-gray-300 text-gray-800 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition pr-12"
                   disabled={isLoading}
                 />
                 <button
@@ -324,7 +328,7 @@ export default function RegisterPage() {
                   type={showConfirmPassword ? "text" : "password"}
                   {...register("confirmPassword")}
                   placeholder="Re-enter your password"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition pr-12"
+                  className="w-full px-4 py-2 border border-gray-300 text-gray-800 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition pr-12"
                   disabled={isLoading}
                 />
                 <button
