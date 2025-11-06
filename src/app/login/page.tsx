@@ -182,7 +182,7 @@ export default function LoginPage() {
               type="submit"
               disabled={isLoading}
               className="w-full py-2.5 px-4 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              style={{ background: "var(--primary)", color: "var(--text)" }}
+              style={{ background: "var(--primary)", color: "var(--bg-dark)" }}
             >
               {isLoading ? (
                 <>

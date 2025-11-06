@@ -244,11 +244,27 @@ export default function RegisterPage() {
 
             {/* Role Selection */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                className="block text-sm font-medium text-gray-700 mb-2"
+                style={{ color: "var(--text)" }}
+              >
                 I am a
               </label>
               <div className="grid grid-cols-2 gap-3">
-                <label className="relative flex items-center justify-center p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50">
+                {/* Student Option */}
+                <label
+                  className="relative flex items-center justify-center p-4 border-2 rounded-lg cursor-pointer transition"
+                  style={{
+                    borderColor:
+                      watch("role") === "student"
+                        ? "var(--primary)"
+                        : "var(--border)",
+                    background:
+                      watch("role") === "student"
+                        ? "var(--primary)"
+                        : "var(--bg-dark)",
+                  }}
+                >
                   <input
                     type="radio"
                     value="student"
@@ -258,12 +274,30 @@ export default function RegisterPage() {
                   />
                   <span
                     className="text-sm font-medium"
-                    style={{ color: "var(--text)" }}
+                    style={{
+                      color:
+                        watch("role") === "student"
+                          ? "var(--bg-dark)"
+                          : "var(--text)",
+                    }}
                   >
                     Student
                   </span>
                 </label>
-                <label className="relative flex items-center justify-center p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50">
+                {/* PSG Member Option */}
+                <label
+                  className="relative flex items-center justify-center p-4 border-2 rounded-lg cursor-pointer transition"
+                  style={{
+                    borderColor:
+                      watch("role") === "psg_member"
+                        ? "var(--primary)"
+                        : "var(--border)",
+                    background:
+                      watch("role") === "psg_member"
+                        ? "var(--primary)"
+                        : "var(--bg-dark)",
+                  }}
+                >
                   <input
                     type="radio"
                     value="psg_member"
@@ -273,7 +307,12 @@ export default function RegisterPage() {
                   />
                   <span
                     className="text-sm font-medium"
-                    style={{ color: "var(--text)" }}
+                    style={{
+                      color:
+                        watch("role") === "psg_member"
+                          ? "var(--bg-dark)"
+                          : "var(--text)",
+                    }}
                   >
                     PSG Member
                   </span>
@@ -438,7 +477,7 @@ export default function RegisterPage() {
               type="submit"
               disabled={isLoading}
               className="w-full py-2.5 px-4 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              style={{ background: "var(--primary)", color: "var(--text)" }}
+              style={{ background: "var(--primary)", color: "var(--bg-dark)" }}
             >
               {isLoading ? (
                 <>
