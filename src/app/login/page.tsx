@@ -7,7 +7,6 @@ import { loginSchema, type LoginInput } from "@/lib/validations/auth";
 import { login } from "@/lib/actions/auth";
 import Link from "next/link";
 import { AlertCircle, Eye, EyeOff, Loader2 } from "lucide-react";
-import { ThemeToggler } from "@/components/ThemeToggler";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -42,12 +41,8 @@ export default function LoginPage() {
     <div
       className="flex min-h-screen relative"
       style={{ background: "var(--bg)", transition: "background 0.3s" }}
+      data-theme="light"
     >
-      {/* Theme Toggle - Top Right */}
-      <div className="absolute top-4 right-4 z-50">
-        <ThemeToggler />
-      </div>
-
       {/* Left side - Branding */}
       <div
         className="hidden lg:flex lg:w-1/2 p-12 flex-col justify-between"
@@ -66,6 +61,15 @@ export default function LoginPage() {
           <p className="text-lg" style={{ color: "var(--text-muted)" }}>
             Caraga State University PSG Referral System
           </p>
+        </div>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <img
+            src="/authlogo.png"
+            alt="CareConnect Logo"
+            width={700}
+            height={700}
+            style={{ objectFit: "contain" }}
+          />
         </div>
         <div>
           <p className="text-sm" style={{ color: "var(--text-muted)" }}>

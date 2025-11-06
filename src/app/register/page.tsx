@@ -6,8 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema, type RegisterInput } from "@/lib/validations/auth";
 import { register as registerAction } from "@/lib/actions/auth";
 import Link from "next/link";
-import { AlertCircle, Eye, EyeOff, Loader2, CheckCircle2 } from "lucide-react";
-import { ThemeToggler } from "@/components/ThemeToggler";
+import { AlertCircle, Eye, EyeOff, Loader2 } from "lucide-react";
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -55,12 +54,8 @@ export default function RegisterPage() {
     <div
       className="flex min-h-screen relative"
       style={{ background: "var(--bg)", transition: "background 0.3s" }}
+      data-theme="light"
     >
-      {/* Theme Toggle - Top Right */}
-      <div className="absolute top-4 right-4 z-50">
-        <ThemeToggler />
-      </div>
-
       {/* Left side - Branding */}
       <div
         className="hidden lg:flex lg:w-1/2 p-12 flex-col justify-between"
@@ -80,49 +75,20 @@ export default function RegisterPage() {
             Caraga State University PSG Referral System
           </p>
         </div>
-        <div className="space-y-4">
-          <div className="flex items-start gap-3">
-            <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-1" />
-            <div>
-              <h3
-                className="font-semibold mb-1"
-                style={{ color: "var(--text)" }}
-              >
-                Secure & Confidential
-              </h3>
-              <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-                Your information is protected with RA 10173 compliance
-              </p>
-            </div>
-          </div>
-          <div className="flex items-start gap-3">
-            <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-1" />
-            <div>
-              <h3
-                className="font-semibold mb-1"
-                style={{ color: "var(--text)" }}
-              >
-                Easy Appointments
-              </h3>
-              <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-                Book sessions with PSG members in real-time
-              </p>
-            </div>
-          </div>
-          <div className="flex items-start gap-3">
-            <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-1" />
-            <div>
-              <h3
-                className="font-semibold mb-1"
-                style={{ color: "var(--text)" }}
-              >
-                Track Your Progress
-              </h3>
-              <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-                Monitor your mental health journey with personalized support
-              </p>
-            </div>
-          </div>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <img
+            src="/authlogo.png"
+            alt="CareConnect Logo"
+            width={700}
+            height={700}
+            style={{ objectFit: "contain" }}
+          />
+        </div>
+        <div>
+          <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+            Your mental health journey starts here. Join our supportive
+            community.
+          </p>
         </div>
       </div>
 
