@@ -42,7 +42,7 @@ export const registerSchema = z
     schoolId: z
       .string()
       .min(1, "School ID is required")
-      .regex(/^[0-9]{4}-[0-9]{4}$/, "School ID must be in format: XXXX-XXXX"),
+      .regex(/^[0-9]{3}-[0-9]{5}$/, "School ID must be in format: XXX-XXXXX"),
     role: z.enum(["student", "psg_member"], {
       message: "Please select a role",
     }),
