@@ -7,15 +7,15 @@ import { loginSchema, type LoginInput } from "@/lib/validations/auth";
 import { login } from "@/lib/actions/auth";
 import Link from "next/link";
 import { AlertCircle, Eye, EyeOff, Loader2 } from "lucide-react";
-import { Alert } from "@/components/Alert";
+import { useEffect } from "react";
+import { useAlert } from "@/components/AlertProvider";
 import { useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const searchParams = useSearchParams();
-  const showSuccess = searchParams.get("registered") === "true";
+  const { showAlert } = useAlert();
 
   const {
     register,
@@ -27,15 +27,29 @@ export default function LoginPage() {
 
   const onSubmit = async (data: LoginInput) => {
     setIsLoading(true);
-    setError(null);
-
     const result = await login(data);
     if (result?.error) {
-      setError(result.error);
+      showAlert({
+        type: "error",
+        message: result.error,
+        duration: 4000,
+      });
       setIsLoading(false);
     }
     // If no error, redirect will happen automatically from server action
   };
+
+  // Show success alert if registered=true in search params
+  useEffect(() => {
+    if (searchParams.get("registered") === "true") {
+      showAlert({
+        type: "success",
+        message: "Account created successfully! Please sign in to continue.",
+        duration: 4000,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   return (
     <div
@@ -102,30 +116,7 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {showSuccess && (
-            <Alert
-              type="success"
-              message="Account created successfully! Please sign in to continue."
-            />
-          )}
-
-          {error && (
-            <div
-              className="mb-6 p-4 rounded-lg flex items-start gap-3"
-              style={{
-                background: "var(--danger)",
-                border: "1px solid var(--border)",
-              }}
-            >
-              <AlertCircle
-                className="w-5 h-5 flex-shrink-0 mt-0.5"
-                style={{ color: "var(--text)" }}
-              />
-              <p className="text-sm" style={{ color: "var(--text)" }}>
-                {error}
-              </p>
-            </div>
-          )}
+          {/* Alerts are now global and shown in top right corner */}
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Email Field */}
