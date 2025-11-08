@@ -12,6 +12,7 @@ export default async function DashboardPage() {
   }
 
   return (
+    // Restyle Dashboard Page on every role
     <DashboardClientWrapper>
       <div className="min-h-screen" style={{ background: "var(--bg)" }}>
         {/* Header */}
