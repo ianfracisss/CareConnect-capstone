@@ -244,12 +244,13 @@ export default function ScreeningResultsPage() {
               </div>
 
               <div
-                className="text-left p-4 rounded-lg"
+                className="py-4 px-6 rounded-lg"
                 style={{
                   color: "var(--text-muted)",
                   fontSize: "0.875rem",
                   background: "var(--bg-light)",
                   border: "1px solid var(--border-muted)",
+                  textAlign: "justify",
                 }}
               >
                 <p>
