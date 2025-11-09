@@ -21,13 +21,17 @@ CREATE TABLE IF NOT EXISTS screening_questions (
 );
 
 -- =======================
--- 2. Screening Results Table
+-- 2. Screening Results Table (Drop and recreate with new schema)
 -- =======================
-CREATE TABLE IF NOT EXISTS screening_results (
+-- Note: This will drop the existing screening_results table and create a new one
+-- If you want to preserve old data, backup first!
+DROP TABLE IF EXISTS screening_results CASCADE;
+
+CREATE TABLE screening_results (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  student_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   total_score NUMERIC NOT NULL,
-  severity_level TEXT NOT NULL CHECK (severity_level IN ('low', 'moderate', 'high')),
+  severity_score INTEGER NOT NULL, -- Numeric score (0-100 range typically)
   color_code TEXT NOT NULL CHECK (color_code IN ('green', 'yellow', 'red')),
   recommendations TEXT,
   requires_immediate_attention BOOLEAN DEFAULT false,
@@ -55,7 +59,7 @@ CREATE TABLE IF NOT EXISTS screening_responses (
 CREATE TABLE IF NOT EXISTS case_assessments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   screening_result_id UUID NOT NULL REFERENCES screening_results(id) ON DELETE CASCADE,
-  student_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   psg_member_id UUID REFERENCES profiles(id) ON DELETE SET NULL,
   status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'in_progress', 'completed', 'escalated')),
   notes TEXT,
@@ -79,14 +83,14 @@ CREATE TABLE IF NOT EXISTS assessment_messages (
 -- =======================
 -- Indexes for Performance
 -- =======================
-CREATE INDEX IF NOT EXISTS idx_screening_results_student_id ON screening_results(student_id);
-CREATE INDEX IF NOT EXISTS idx_screening_results_severity ON screening_results(severity_level);
+CREATE INDEX IF NOT EXISTS idx_screening_results_user_id ON screening_results(user_id);
+CREATE INDEX IF NOT EXISTS idx_screening_results_severity ON screening_results(severity_score);
 CREATE INDEX IF NOT EXISTS idx_screening_results_reviewed ON screening_results(reviewed_at);
 CREATE INDEX IF NOT EXISTS idx_screening_results_created ON screening_results(created_at DESC);
 
 CREATE INDEX IF NOT EXISTS idx_screening_responses_result_id ON screening_responses(screening_result_id);
 
-CREATE INDEX IF NOT EXISTS idx_case_assessments_student_id ON case_assessments(student_id);
+CREATE INDEX IF NOT EXISTS idx_case_assessments_user_id ON case_assessments(user_id);
 CREATE INDEX IF NOT EXISTS idx_case_assessments_psg_member ON case_assessments(psg_member_id);
 CREATE INDEX IF NOT EXISTS idx_case_assessments_status ON case_assessments(status);
 
@@ -127,13 +131,13 @@ CREATE POLICY "PSG/Admin can create questions"
 CREATE POLICY "Students can view own screening results"
   ON screening_results FOR SELECT
   TO authenticated
-  USING (student_id = auth.uid());
+  USING (user_id = auth.uid());
 
 -- Students can insert their own results
 CREATE POLICY "Students can create own screening results"
   ON screening_results FOR INSERT
   TO authenticated
-  WITH CHECK (student_id = auth.uid());
+  WITH CHECK (user_id = auth.uid());
 
 -- PSG members and admins can view all results
 CREATE POLICY "PSG/Admin can view all screening results"
@@ -168,7 +172,7 @@ CREATE POLICY "Students can view own responses"
     EXISTS (
       SELECT 1 FROM screening_results
       WHERE screening_results.id = screening_responses.screening_result_id
-      AND screening_results.student_id = auth.uid()
+      AND screening_results.user_id = auth.uid()
     )
   );
 
@@ -180,7 +184,7 @@ CREATE POLICY "Students can create own responses"
     EXISTS (
       SELECT 1 FROM screening_results
       WHERE screening_results.id = screening_responses.screening_result_id
-      AND screening_results.student_id = auth.uid()
+      AND screening_results.user_id = auth.uid()
     )
   );
 
@@ -201,7 +205,7 @@ CREATE POLICY "PSG/Admin can view all responses"
 CREATE POLICY "Students can view own case assessments"
   ON case_assessments FOR SELECT
   TO authenticated
-  USING (student_id = auth.uid());
+  USING (user_id = auth.uid());
 
 -- PSG members can view and create case assessments
 CREATE POLICY "PSG/Admin can manage case assessments"
@@ -224,7 +228,7 @@ CREATE POLICY "Students can view own case messages"
     EXISTS (
       SELECT 1 FROM case_assessments
       WHERE case_assessments.id = assessment_messages.case_assessment_id
-      AND case_assessments.student_id = auth.uid()
+      AND case_assessments.user_id = auth.uid()
     )
   );
 
@@ -237,7 +241,7 @@ CREATE POLICY "Students can send messages in own cases"
     AND EXISTS (
       SELECT 1 FROM case_assessments
       WHERE case_assessments.id = assessment_messages.case_assessment_id
-      AND case_assessments.student_id = auth.uid()
+      AND case_assessments.user_id = auth.uid()
     )
   );
 

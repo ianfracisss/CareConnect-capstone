@@ -166,6 +166,7 @@ export function calculateSeverity(responses: QuestionResponse[]): {
   severity: SeverityLevelType;
   color: "green" | "yellow" | "red";
   totalScore: number;
+  percentage: number;
   requiresImmediateAttention: boolean;
 } {
   let totalScore = 0;
@@ -204,6 +205,7 @@ export function calculateSeverity(responses: QuestionResponse[]): {
     severity,
     color,
     totalScore,
+    percentage,
     requiresImmediateAttention,
   };
 }

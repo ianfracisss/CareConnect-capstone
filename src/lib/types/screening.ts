@@ -24,9 +24,9 @@ export type ScreeningResponse = {
 
 export type ScreeningResult = {
   id: string;
-  student_id: string;
+  user_id: string;
   total_score: number;
-  severity_level: "low" | "moderate" | "high";
+  severity_score: number; // Numeric score (e.g., 0-100)
   color_code: "green" | "yellow" | "red";
   recommendations: string | null;
   requires_immediate_attention: boolean;
@@ -39,7 +39,7 @@ export type ScreeningResult = {
 export type CaseAssessment = {
   id: string;
   screening_result_id: string;
-  student_id: string;
+  user_id: string;
   psg_member_id: string | null;
   status: "pending" | "in_progress" | "completed" | "escalated";
   notes: string | null;
@@ -76,9 +76,9 @@ CREATE TABLE IF NOT EXISTS screening_questions (
 -- Screening Results Table
 CREATE TABLE IF NOT EXISTS screening_results (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  student_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   total_score NUMERIC NOT NULL,
-  severity_level TEXT NOT NULL CHECK (severity_level IN ('low', 'moderate', 'high')),
+  severity_score INTEGER NOT NULL,
   color_code TEXT NOT NULL CHECK (color_code IN ('green', 'yellow', 'red')),
   recommendations TEXT,
   requires_immediate_attention BOOLEAN DEFAULT false,
@@ -98,11 +98,11 @@ CREATE TABLE IF NOT EXISTS screening_responses (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Case Assessment Table
+-- Case Assessments Table
 CREATE TABLE IF NOT EXISTS case_assessments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   screening_result_id UUID NOT NULL REFERENCES screening_results(id) ON DELETE CASCADE,
-  student_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   psg_member_id UUID REFERENCES profiles(id) ON DELETE SET NULL,
   status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'in_progress', 'completed', 'escalated')),
   notes TEXT,

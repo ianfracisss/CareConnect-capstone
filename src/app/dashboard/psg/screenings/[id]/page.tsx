@@ -143,7 +143,10 @@ export default function ScreeningDetailPage() {
         }}
       >
         <div>
-          <h2 className="text-xl font-semibold" style={{ color: "var(--text)" }}>
+          <h2
+            className="text-xl font-semibold"
+            style={{ color: "var(--text)" }}
+          >
             Response Details
           </h2>
           <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>
@@ -184,7 +187,10 @@ export default function ScreeningDetailPage() {
                 className="pl-4 py-2 border-l-2"
                 style={{ borderColor: "var(--primary-20)" }}
               >
-                <p className="text-sm font-medium" style={{ color: "var(--text)" }}>
+                <p
+                  className="text-sm font-medium"
+                  style={{ color: "var(--text)" }}
+                >
                   Answer: {String(response.answer)}
                 </p>
               </div>
@@ -245,7 +251,10 @@ export default function ScreeningDetailPage() {
         }}
       >
         <div>
-          <h2 className="text-xl font-semibold" style={{ color: "var(--text)" }}>
+          <h2
+            className="text-xl font-semibold"
+            style={{ color: "var(--text)" }}
+          >
             Actions
           </h2>
           <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>

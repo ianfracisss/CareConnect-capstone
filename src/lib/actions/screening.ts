@@ -31,9 +31,9 @@ export async function submitScreening(responses: QuestionResponse[]) {
     const { data: result, error: resultError } = await supabase
       .from("screening_results")
       .insert({
-        student_id: user.id,
+        user_id: user.id,
         total_score: severity.totalScore,
-        severity_level: severity.severity,
+        severity_score: Math.round(severity.percentage), // Store as integer (0-100)
         color_code: severity.color,
         requires_immediate_attention: severity.requiresImmediateAttention,
       })
@@ -218,10 +218,10 @@ export async function createCaseAssessment(screeningId: string) {
       return { error: "User not authenticated" };
     }
 
-    // Get screening to get student_id
+    // Get screening to get user_id
     const { data: screening, error: screeningError } = await supabase
       .from("screening_results")
-      .select("student_id")
+      .select("user_id")
       .eq("id", screeningId)
       .single();
 
@@ -234,7 +234,7 @@ export async function createCaseAssessment(screeningId: string) {
       .from("case_assessments")
       .insert({
         screening_result_id: screeningId,
-        student_id: screening.student_id,
+        user_id: screening.user_id,
         psg_member_id: user.id,
         status: "in_progress",
       })
@@ -281,7 +281,9 @@ export async function getScreeningQuestions() {
 /**
  * Add a custom screening question (Admin/PSG only)
  */
-export async function addScreeningQuestion(question: Omit<ScreeningQuestion, "id" | "created_at" | "updated_at">) {
+export async function addScreeningQuestion(
+  question: Omit<ScreeningQuestion, "id" | "created_at" | "updated_at">
+) {
   try {
     const supabase = await createClient();
 

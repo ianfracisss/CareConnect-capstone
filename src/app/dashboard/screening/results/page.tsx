@@ -88,7 +88,10 @@ export default function ScreeningResultsPage() {
         }}
       >
         <div>
-          <h2 className="text-xl font-semibold" style={{ color: "var(--text)" }}>
+          <h2
+            className="text-xl font-semibold"
+            style={{ color: "var(--text)" }}
+          >
             Next Steps
           </h2>
           <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>
