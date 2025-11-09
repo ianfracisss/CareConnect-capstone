@@ -1,0 +1,319 @@
+"use server";
+
+import { createClient } from "@/lib/supabase/server";
+import {
+  screeningQuestionSchema,
+  calculateSeverity,
+  type ScreeningQuestion,
+  type QuestionResponse,
+} from "@/lib/validations/screening";
+
+/**
+ * Submit a new screening with responses
+ */
+export async function submitScreening(responses: QuestionResponse[]) {
+  try {
+    const supabase = await createClient();
+
+    // Get current user
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+    if (userError || !user) {
+      return { error: "User not authenticated" };
+    }
+
+    // Calculate severity
+    const severity = calculateSeverity(responses);
+
+    // Insert screening result
+    const { data: result, error: resultError } = await supabase
+      .from("screening_results")
+      .insert({
+        student_id: user.id,
+        total_score: severity.totalScore,
+        severity_level: severity.severity,
+        color_code: severity.color,
+        requires_immediate_attention: severity.requiresImmediateAttention,
+      })
+      .select()
+      .single();
+
+    if (resultError || !result) {
+      console.error("Error inserting screening result:", resultError);
+      return { error: "Failed to save screening result" };
+    }
+
+    // Insert screening responses
+    const responsesToInsert = responses.map((response) => ({
+      screening_result_id: result.id,
+      question_id: response.question_id,
+      answer: String(response.answer),
+      score: response.score || 0,
+    }));
+
+    const { error: responsesError } = await supabase
+      .from("screening_responses")
+      .insert(responsesToInsert);
+
+    if (responsesError) {
+      console.error("Error inserting responses:", responsesError);
+      return { error: "Failed to save screening responses" };
+    }
+
+    return { data: result, success: true };
+  } catch (error) {
+    console.error("Unexpected error in submitScreening:", error);
+    return { error: "An unexpected error occurred" };
+  }
+}
+
+/**
+ * Get all screening results for PSG members (with filters)
+ */
+export async function getScreeningResults(options?: {
+  reviewed?: boolean;
+  severityLevel?: "low" | "moderate" | "high";
+  limit?: number;
+}) {
+  try {
+    const supabase = await createClient();
+
+    let query = supabase
+      .from("screening_results")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (options?.reviewed !== undefined) {
+      if (options.reviewed) {
+        query = query.not("reviewed_at", "is", null);
+      } else {
+        query = query.is("reviewed_at", null);
+      }
+    }
+
+    if (options?.severityLevel) {
+      query = query.eq("severity_level", options.severityLevel);
+    }
+
+    if (options?.limit) {
+      query = query.limit(options.limit);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.error("Error fetching screening results:", error);
+      return { error: "Failed to fetch screening results" };
+    }
+
+    return { data, success: true };
+  } catch (error) {
+    console.error("Unexpected error in getScreeningResults:", error);
+    return { error: "An unexpected error occurred" };
+  }
+}
+
+/**
+ * Get a single screening result with responses
+ */
+export async function getScreeningById(screeningId: string) {
+  try {
+    const supabase = await createClient();
+
+    // Get screening result
+    const { data: result, error: resultError } = await supabase
+      .from("screening_results")
+      .select("*")
+      .eq("id", screeningId)
+      .single();
+
+    if (resultError || !result) {
+      console.error("Error fetching screening:", resultError);
+      return { error: "Screening not found" };
+    }
+
+    // Get responses
+    const { data: responses, error: responsesError } = await supabase
+      .from("screening_responses")
+      .select("*")
+      .eq("screening_result_id", screeningId)
+      .order("created_at", { ascending: true });
+
+    if (responsesError) {
+      console.error("Error fetching responses:", responsesError);
+      return { error: "Failed to fetch responses" };
+    }
+
+    return {
+      data: {
+        screening: result,
+        responses: responses || [],
+      },
+      success: true,
+    };
+  } catch (error) {
+    console.error("Unexpected error in getScreeningById:", error);
+    return { error: "An unexpected error occurred" };
+  }
+}
+
+/**
+ * Update screening review status
+ */
+export async function updateScreeningReview(
+  screeningId: string,
+  reviewNotes: string
+) {
+  try {
+    const supabase = await createClient();
+
+    // Get current user (must be PSG member or admin)
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+    if (userError || !user) {
+      return { error: "User not authenticated" };
+    }
+
+    const { data, error } = await supabase
+      .from("screening_results")
+      .update({
+        recommendations: reviewNotes,
+        reviewed_by: user.id,
+        reviewed_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", screeningId)
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error updating screening review:", error);
+      return { error: "Failed to update screening review" };
+    }
+
+    return { data, success: true };
+  } catch (error) {
+    console.error("Unexpected error in updateScreeningReview:", error);
+    return { error: "An unexpected error occurred" };
+  }
+}
+
+/**
+ * Create a case assessment for a screening
+ */
+export async function createCaseAssessment(screeningId: string) {
+  try {
+    const supabase = await createClient();
+
+    // Get current user (PSG member)
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+    if (userError || !user) {
+      return { error: "User not authenticated" };
+    }
+
+    // Get screening to get student_id
+    const { data: screening, error: screeningError } = await supabase
+      .from("screening_results")
+      .select("student_id")
+      .eq("id", screeningId)
+      .single();
+
+    if (screeningError || !screening) {
+      return { error: "Screening not found" };
+    }
+
+    // Create case assessment
+    const { data, error } = await supabase
+      .from("case_assessments")
+      .insert({
+        screening_result_id: screeningId,
+        student_id: screening.student_id,
+        psg_member_id: user.id,
+        status: "in_progress",
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error creating case assessment:", error);
+      return { error: "Failed to create case assessment" };
+    }
+
+    return { data, success: true };
+  } catch (error) {
+    console.error("Unexpected error in createCaseAssessment:", error);
+    return { error: "An unexpected error occurred" };
+  }
+}
+
+/**
+ * Get preset screening questions
+ */
+export async function getScreeningQuestions() {
+  try {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+      .from("screening_questions")
+      .select("*")
+      .eq("is_preset", true)
+      .order("order", { ascending: true });
+
+    if (error) {
+      console.error("Error fetching questions:", error);
+      return { error: "Failed to fetch questions" };
+    }
+
+    return { data, success: true };
+  } catch (error) {
+    console.error("Unexpected error in getScreeningQuestions:", error);
+    return { error: "An unexpected error occurred" };
+  }
+}
+
+/**
+ * Add a custom screening question (Admin/PSG only)
+ */
+export async function addScreeningQuestion(question: Omit<ScreeningQuestion, "id" | "created_at" | "updated_at">) {
+  try {
+    const supabase = await createClient();
+
+    // Get current user
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+    if (userError || !user) {
+      return { error: "User not authenticated" };
+    }
+
+    // Validate question
+    const validated = screeningQuestionSchema.parse(question);
+
+    const { data, error } = await supabase
+      .from("screening_questions")
+      .insert({
+        ...validated,
+        created_by: user.id,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error adding question:", error);
+      return { error: "Failed to add question" };
+    }
+
+    return { data, success: true };
+  } catch (error) {
+    console.error("Unexpected error in addScreeningQuestion:", error);
+    return { error: "An unexpected error occurred" };
+  }
+}
