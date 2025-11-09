@@ -33,9 +33,9 @@ export default function TakeScreeningPage() {
       // For now, store in sessionStorage and navigate to results
       const fullResult: ScreeningResult = {
         id: `temp-${Date.now()}`,
-        student_id: "current-user", // TODO: Get from auth context
+        user_id: "current-user", // TODO: Get from auth context
         total_score: result.totalScore,
-        severity_level: result.severity,
+        severity_score: Math.round(result.percentage),
         color_code: result.color,
         recommendations: null,
         requires_immediate_attention: result.requiresImmediateAttention,

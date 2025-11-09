@@ -14,9 +14,9 @@ import { ScreeningResult, ScreeningResponse } from "@/lib/types/screening";
 // Mock data - in production, fetch from Supabase based on screening ID
 const mockScreening: ScreeningResult = {
   id: "1",
-  student_id: "student-1",
+  user_id: "student-1",
   total_score: 85,
-  severity_level: "high",
+  severity_score: 85,
   color_code: "red",
   recommendations: null,
   requires_immediate_attention: true,
@@ -101,7 +101,7 @@ export default function ScreeningDetailPage() {
             Screening Review
           </h1>
           <p style={{ color: "var(--text-muted)" }}>
-            Student #{screening.student_id.slice(-4)} •{" "}
+            Student #{screening.user_id.slice(-4)} •{" "}
             {formatDate(screening.created_at)}
           </p>
         </div>
@@ -150,7 +150,7 @@ export default function ScreeningDetailPage() {
             Response Details
           </h2>
           <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>
-            View the student's individual answers to screening questions
+            View the student&apos;s individual answers to screening questions
           </p>
         </div>
 

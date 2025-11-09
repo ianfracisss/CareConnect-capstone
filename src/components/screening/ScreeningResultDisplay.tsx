@@ -130,7 +130,11 @@ export function ScreeningResultDisplay({
                 className="text-2xl font-bold capitalize"
                 style={{ color: config.color }}
               >
-                {result.severity_level}
+                {result.severity_score >= 70
+                  ? "high"
+                  : result.severity_score >= 40
+                  ? "moderate"
+                  : "low"}
               </p>
             </div>
           </div>

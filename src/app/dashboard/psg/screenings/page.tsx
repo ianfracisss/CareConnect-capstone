@@ -19,9 +19,9 @@ import { ScreeningResult } from "@/lib/types/screening";
 const mockScreenings: ScreeningResult[] = [
   {
     id: "1",
-    student_id: "student-1",
+    user_id: "student-1",
     total_score: 85,
-    severity_level: "high",
+    severity_score: 85,
     color_code: "red",
     recommendations: null,
     requires_immediate_attention: true,
@@ -32,9 +32,9 @@ const mockScreenings: ScreeningResult[] = [
   },
   {
     id: "2",
-    student_id: "student-2",
+    user_id: "student-2",
     total_score: 55,
-    severity_level: "moderate",
+    severity_score: 55,
     color_code: "yellow",
     recommendations: null,
     requires_immediate_attention: false,
@@ -45,9 +45,9 @@ const mockScreenings: ScreeningResult[] = [
   },
   {
     id: "3",
-    student_id: "student-3",
+    user_id: "student-3",
     total_score: 25,
-    severity_level: "low",
+    severity_score: 25,
     color_code: "green",
     recommendations: null,
     requires_immediate_attention: false,
@@ -74,13 +74,8 @@ export default function PSGScreeningsPage() {
     if (!a.reviewed_at && b.reviewed_at) return -1;
     if (a.reviewed_at && !b.reviewed_at) return 1;
 
-    const severityOrder: Record<string, number> = {
-      high: 3,
-      moderate: 2,
-      low: 1,
-    };
-    const severityDiff =
-      severityOrder[b.severity_level] - severityOrder[a.severity_level];
+    // Sort by severity_score (higher scores first)
+    const severityDiff = b.severity_score - a.severity_score;
     if (severityDiff !== 0) return severityDiff;
 
     return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
@@ -88,19 +83,25 @@ export default function PSGScreeningsPage() {
 
   const pendingCount = screenings.filter((s) => !s.reviewed_at).length;
   const highRiskCount = screenings.filter(
-    (s) => s.severity_level === "high" && !s.reviewed_at
+    (s) => s.severity_score >= 70 && !s.reviewed_at
   ).length;
 
-  const getSeverityBadge = (severity: string, colorCode: string) => {
+  const getSeverityBadge = (severityScore: number, colorCode: string) => {
     const variants: Record<string, "destructive" | "default" | "secondary"> = {
       red: "destructive",
       yellow: "default",
       green: "secondary",
     };
 
+    const getSeverityLabel = (score: number) => {
+      if (score >= 70) return "HIGH";
+      if (score >= 40) return "MODERATE";
+      return "LOW";
+    };
+
     return (
       <Badge variant={variants[colorCode] || "default"}>
-        {severity.toUpperCase()}
+        {getSeverityLabel(severityScore)}
       </Badge>
     );
   };
@@ -216,10 +217,10 @@ export default function PSGScreeningsPage() {
                         <div className="flex-1 space-y-1">
                           <div className="flex items-center gap-2">
                             <span className="font-medium">
-                              Student #{screening.student_id.slice(-4)}
+                              Student #{screening.user_id.slice(-4)}
                             </span>
                             {getSeverityBadge(
-                              screening.severity_level,
+                              screening.severity_score,
                               screening.color_code
                             )}
                             {!screening.reviewed_at && (
