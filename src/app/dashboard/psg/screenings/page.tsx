@@ -1,59 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { DashboardClientWrapper } from "@/components/DashboardClientWrapper";
 import { DashboardNavbar } from "@/components/DashboardNavbar";
 import { AlertCircle, CheckCircle, Clock, Eye } from "lucide-react";
 import { ScreeningResult } from "@/lib/types/screening";
-
-// Mock data - in production, fetch from Supabase
-const mockScreenings: ScreeningResult[] = [
-  {
-    id: "1",
-    user_id: "student-1",
-    total_score: 85,
-    severity_score: 85,
-    color_code: "red",
-    recommendations: null,
-    requires_immediate_attention: true,
-    reviewed_by: null,
-    reviewed_at: null,
-    created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
-    updated_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-  },
-  {
-    id: "2",
-    user_id: "student-2",
-    total_score: 55,
-    severity_score: 55,
-    color_code: "yellow",
-    recommendations: null,
-    requires_immediate_attention: false,
-    reviewed_by: null,
-    reviewed_at: null,
-    created_at: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(), // 5 hours ago
-    updated_at: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
-  },
-  {
-    id: "3",
-    user_id: "student-3",
-    total_score: 25,
-    severity_score: 25,
-    color_code: "green",
-    recommendations: null,
-    requires_immediate_attention: false,
-    reviewed_by: "psg-member-1",
-    reviewed_at: new Date(Date.now() - 20 * 60 * 60 * 1000).toISOString(),
-    created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
-    updated_at: new Date(Date.now() - 20 * 60 * 60 * 1000).toISOString(),
-  },
-];
+import { getScreeningResults } from "@/lib/actions/screening";
 
 export default function PSGScreeningsPage() {
-  const [screenings] = useState<ScreeningResult[]>(mockScreenings);
+  const [screenings, setScreenings] = useState<ScreeningResult[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | "pending" | "reviewed">("all");
   const router = useRouter();
+
+  useEffect(() => {
+    async function fetchScreenings() {
+      try {
+        const response = await getScreeningResults();
+
+        if (response.error || !response.data) {
+          console.error("Error fetching screenings:", response.error);
+          setScreenings([]);
+        } else {
+          setScreenings(response.data);
+        }
+      } catch (error) {
+        console.error("Unexpected error fetching screenings:", error);
+        setScreenings([]);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchScreenings();
+  }, []);
 
   const filteredScreenings = screenings.filter((s) => {
     if (filter === "pending") return !s.reviewed_at;
@@ -137,6 +118,29 @@ export default function PSGScreeningsPage() {
     if (diffHours < 24) return `${diffHours}h ago`;
     return `${diffDays}d ago`;
   };
+
+  if (isLoading) {
+    return (
+      <DashboardClientWrapper>
+        <div className="min-h-screen" style={{ background: "var(--bg)" }}>
+          <DashboardNavbar subtitle="PSG Member Portal" showHomeButton={true} />
+          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div
+              className="p-8 text-center rounded-xl border shadow"
+              style={{
+                background: "var(--bg-light)",
+                borderColor: "var(--border-muted)",
+              }}
+            >
+              <p style={{ color: "var(--text-muted)" }}>
+                Loading screenings...
+              </p>
+            </div>
+          </main>
+        </div>
+      </DashboardClientWrapper>
+    );
+  }
 
   return (
     <DashboardClientWrapper>
