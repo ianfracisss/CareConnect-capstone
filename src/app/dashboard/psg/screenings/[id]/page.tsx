@@ -4,7 +4,7 @@ import { use, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { DashboardClientWrapper } from "@/components/DashboardClientWrapper";
 import { DashboardNavbar } from "@/components/DashboardNavbar";
-import { AlertCircle, CheckCircle, MessageSquare, Loader2 } from "lucide-react";
+import { AlertCircle, CheckCircle, Loader2 } from "lucide-react";
 import { ScreeningResultDisplay } from "@/components/screening/ScreeningResultDisplay";
 import { ScreeningResult, ScreeningResponse } from "@/lib/types/screening";
 import {
@@ -84,12 +84,6 @@ export default function ScreeningDetailPage({
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleStartCaseAssessment = () => {
-    if (!screening) return;
-    // TODO: Navigate to case assessment chat
-    router.push(`/dashboard/psg/cases/${screening.id}`);
   };
 
   const formatDate = (dateString: string) => {
@@ -343,23 +337,11 @@ export default function ScreeningDetailPage({
                   Actions
                 </h2>
                 <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-                  Choose how you would like to proceed with this case
+                  Review and manage this screening
                 </p>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                <button
-                  onClick={handleStartCaseAssessment}
-                  className="inline-flex items-center justify-center gap-2 px-8 py-2.5 rounded-md font-medium text-sm transition w-full sm:w-auto"
-                  style={{
-                    background: "var(--primary)",
-                    color: "var(--bg-dark)",
-                  }}
-                >
-                  <MessageSquare className="h-4 w-4" />
-                  Start Case Assessment
-                </button>
-
                 {!screening.reviewed_at && (
                   <button
                     onClick={handleMarkAsReviewed}
