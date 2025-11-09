@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { DashboardClientWrapper } from "@/components/DashboardClientWrapper";
+import { DashboardNavbar } from "@/components/DashboardNavbar";
 import { ScreeningForm } from "@/components/screening/ScreeningForm";
 import {
   ScreeningQuestion,
@@ -56,40 +58,45 @@ export default function TakeScreeningPage() {
 
   if (isLoading) {
     return (
-      <div
-        className="min-h-screen flex items-center justify-center"
-        style={{ background: "var(--bg)" }}
-      >
-        <Loader2
-          className="w-8 h-8 animate-spin"
-          style={{ color: "var(--primary)" }}
-        />
-      </div>
+      <DashboardClientWrapper>
+        <div className="min-h-screen" style={{ background: "var(--bg)" }}>
+          <DashboardNavbar showHomeButton={true} />
+          <div className="flex items-center justify-center py-12">
+            <Loader2
+              className="w-8 h-8 animate-spin"
+              style={{ color: "var(--primary)" }}
+            />
+          </div>
+        </div>
+      </DashboardClientWrapper>
     );
   }
 
   return (
-    <div
-      className="min-h-screen py-12 px-4"
-      style={{ background: "var(--bg)" }}
-    >
-      {/* Header */}
-      <div className="max-w-3xl mx-auto mb-8">
-        <h1
-          className="text-3xl font-bold mb-2"
-          style={{ color: "var(--text)" }}
-        >
-          Mental Health Screening
-        </h1>
-        <p style={{ color: "var(--text-muted)" }}>
-          This confidential screening will help us understand how you&apos;ve
-          been feeling recently. Please answer honestly - there are no right or
-          wrong answers.
-        </p>
-      </div>
+    <DashboardClientWrapper>
+      <div className="min-h-screen" style={{ background: "var(--bg)" }}>
+        <DashboardNavbar showHomeButton={true} />
 
-      {/* Screening Form */}
-      <ScreeningForm questions={questions} onSubmit={handleSubmit} />
-    </div>
+        <div className="py-12 px-4">
+          {/* Header */}
+          <div className="max-w-3xl mx-auto mb-8">
+            <h1
+              className="text-3xl font-bold mb-2"
+              style={{ color: "var(--text)" }}
+            >
+              Mental Health Screening
+            </h1>
+            <p style={{ color: "var(--text-muted)" }}>
+              This confidential screening will help us understand how
+              you&apos;ve been feeling recently. Please answer honestly - there
+              are no right or wrong answers.
+            </p>
+          </div>
+
+          {/* Screening Form */}
+          <ScreeningForm questions={questions} onSubmit={handleSubmit} />
+        </div>
+      </div>
+    </DashboardClientWrapper>
   );
 }

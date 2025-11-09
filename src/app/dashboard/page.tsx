@@ -1,7 +1,6 @@
 import { getUser } from "@/lib/actions/auth";
 import { redirect } from "next/navigation";
-import { LogoutButton } from "@/components/LogoutButton";
-import { ThemeToggler } from "@/components/ThemeToggler";
+import { DashboardNavbar } from "@/components/DashboardNavbar";
 import { formatRole } from "@/lib/utils/auth";
 import { DashboardClientWrapper } from "@/components/DashboardClientWrapper";
 import Link from "next/link";
@@ -28,34 +27,7 @@ export default async function DashboardPage() {
     // Restyle Dashboard Page on every role
     <DashboardClientWrapper>
       <div className="min-h-screen" style={{ background: "var(--bg)" }}>
-        {/* Header */}
-        <header
-          style={{
-            background: "var(--bg-dark)",
-            boxShadow: "0 2px 16px 0 var(--border-muted)",
-          }}
-        >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-            <div>
-              <h1
-                className="text-2xl font-bold"
-                style={{ color: "var(--primary)" }}
-              >
-                CareConnect
-              </h1>
-              <p
-                className="text-sm mt-1"
-                style={{ color: "var(--text-muted)" }}
-              >
-                Welcome back, {user.full_name}
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <ThemeToggler />
-              <LogoutButton />
-            </div>
-          </div>
-        </header>
+        <DashboardNavbar subtitle={`Welcome back, ${user.full_name}`} />
 
         {/* Main Content */}
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

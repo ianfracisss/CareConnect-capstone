@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { DashboardClientWrapper } from "@/components/DashboardClientWrapper";
+import { DashboardNavbar } from "@/components/DashboardNavbar";
 import { ScreeningResultDisplay } from "@/components/screening/ScreeningResultDisplay";
 import { ScreeningResult } from "@/lib/types/screening";
-import { ArrowLeft, MessageSquare, Calendar, RotateCcw } from "lucide-react";
-import { DashboardClientWrapper } from "@/components/DashboardClientWrapper";
+import { MessageSquare, Calendar, RotateCcw } from "lucide-react";
 
 export default function ScreeningResultsPage() {
   const [result, setResult] = useState<ScreeningResult | null>(null);
@@ -64,6 +65,7 @@ export default function ScreeningResultsPage() {
     return (
       <DashboardClientWrapper>
         <div className="min-h-screen" style={{ background: "var(--bg)" }}>
+          <DashboardNavbar showHomeButton={true} />
           <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div
               className="p-8 text-center rounded-xl border shadow"
@@ -89,19 +91,13 @@ export default function ScreeningResultsPage() {
   return (
     <DashboardClientWrapper>
       <div className="min-h-screen" style={{ background: "var(--bg)" }}>
+        <DashboardNavbar showHomeButton={true} />
+
         {/* Main Content */}
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="space-y-6">
             {/* Centered Header Above Card */}
-            <div className="max-w-3xl mx-auto flex flex-col items-center mb-2 relative">
-              <button
-                onClick={() => router.push("/dashboard")}
-                className="absolute left-0 top-1 p-2 rounded-md transition hover:bg-accent"
-                style={{ color: "var(--text)" }}
-                title="Back to Dashboard"
-              >
-                <ArrowLeft className="h-5 w-5" />
-              </button>
+            <div className="max-w-3xl mx-auto flex flex-col items-center mb-2">
               <h1
                 className="text-2xl font-bold tracking-tight text-center"
                 style={{ color: "var(--text)" }}
