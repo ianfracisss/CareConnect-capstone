@@ -11,6 +11,7 @@ import {
   createCaseAssessment,
 } from "@/lib/actions/screening";
 import { MessageSquare, Calendar, RotateCcw } from "lucide-react";
+import { useAlert } from "@/components/AlertProvider";
 
 export default function ScreeningResultsPage() {
   const [result, setResult] = useState<ScreeningResult | null>(null);
@@ -19,6 +20,7 @@ export default function ScreeningResultsPage() {
   const [isCreatingAssessment, setIsCreatingAssessment] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const { showAlert } = useAlert();
 
   useEffect(() => {
     async function fetchScreeningResult() {
@@ -53,7 +55,6 @@ export default function ScreeningResultsPage() {
 
     fetchScreeningResult();
   }, [router]);
-
   const handleStartCaseAssessment = async () => {
     if (!result?.id) return;
 
@@ -62,7 +63,10 @@ export default function ScreeningResultsPage() {
       const response = await createCaseAssessment(result.id);
 
       if (response.error) {
-        alert(`Error: ${response.error}`);
+        showAlert({
+          type: "error",
+          message: `Error: ${response.error}`,
+        });
         return;
       }
 
@@ -70,12 +74,17 @@ export default function ScreeningResultsPage() {
       setHasCaseAssessment(true);
       sessionStorage.setItem("hasCaseAssessment", "true");
 
-      alert(
-        "Case assessment initiated. A PSG member will reach out to you soon."
-      );
+      showAlert({
+        type: "success",
+        message:
+          "Case assessment initiated. A PSG member will reach out to you soon.",
+      });
     } catch (error) {
       console.error("Error creating case assessment:", error);
-      alert("Failed to start case assessment. Please try again.");
+      showAlert({
+        type: "error",
+        message: "Failed to start case assessment. Please try again.",
+      });
     } finally {
       setIsCreatingAssessment(false);
     }
@@ -256,9 +265,11 @@ export default function ScreeningResultsPage() {
                   <button
                     onClick={() => {
                       if (!hasCaseAssessment) {
-                        alert(
-                          "Please start a case assessment first before booking an appointment."
-                        );
+                        showAlert({
+                          type: "warning",
+                          message:
+                            "Please start a case assessment first before booking an appointment.",
+                        });
                         return;
                       }
                       router.push("/dashboard/appointments");

@@ -14,12 +14,14 @@ import {
   getScreeningQuestions,
 } from "@/lib/actions/screening";
 import { Loader2 } from "lucide-react";
+import { useAlert } from "@/components/AlertProvider";
 
 export default function TakeScreeningPage() {
   const [questions, setQuestions] = useState<ScreeningQuestion[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const { showAlert } = useAlert();
 
   useEffect(() => {
     async function loadQuestions() {
@@ -49,7 +51,10 @@ export default function TakeScreeningPage() {
       const response = await submitScreening(responses);
 
       if (response.error) {
-        alert(`Failed to submit screening: ${response.error}`);
+        showAlert({
+          type: "error",
+          message: `Failed to submit screening: ${response.error}`,
+        });
         return;
       }
 
@@ -61,7 +66,10 @@ export default function TakeScreeningPage() {
       router.push("/dashboard/screening/results");
     } catch (error) {
       console.error("Error submitting screening:", error);
-      alert("Failed to submit screening. Please try again.");
+      showAlert({
+        type: "error",
+        message: "Failed to submit screening. Please try again.",
+      });
     }
   };
 

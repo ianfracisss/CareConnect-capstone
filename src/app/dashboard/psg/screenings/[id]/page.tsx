@@ -11,6 +11,7 @@ import {
   getScreeningById,
   updateScreeningReview,
 } from "@/lib/actions/screening";
+import { useAlert } from "@/components/AlertProvider";
 
 export default function ScreeningDetailPage({
   params,
@@ -27,6 +28,7 @@ export default function ScreeningDetailPage({
   const [studentNumber, setStudentNumber] = useState<number | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
+  const { showAlert } = useAlert();
 
   useEffect(() => {
     setIsMounted(true);
@@ -63,7 +65,6 @@ export default function ScreeningDetailPage({
 
     loadScreening();
   }, [id]);
-
   const handleMarkAsReviewed = async () => {
     if (!screening) return;
 
@@ -72,15 +73,24 @@ export default function ScreeningDetailPage({
       const result = await updateScreeningReview(screening.id, reviewNotes);
 
       if (result.error) {
-        alert("Failed to save review. Please try again.");
+        showAlert({
+          type: "error",
+          message: "Failed to save review. Please try again.",
+        });
         return;
       }
 
-      alert("Screening marked as reviewed");
+      showAlert({
+        type: "success",
+        message: "Screening marked as reviewed",
+      });
       router.push("/dashboard/psg/screenings");
     } catch (err) {
       console.error("Error saving review:", err);
-      alert("Failed to save review. Please try again.");
+      showAlert({
+        type: "error",
+        message: "Failed to save review. Please try again.",
+      });
     } finally {
       setIsSubmitting(false);
     }
