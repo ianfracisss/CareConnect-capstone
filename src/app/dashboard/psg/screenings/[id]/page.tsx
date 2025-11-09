@@ -176,12 +176,12 @@ export default function ScreeningDetailPage({
             <div className="flex items-center justify-between">
               <div>
                 <h1
-                  className="text-3xl font-bold tracking-tight"
+                  className="text-2xl font-bold tracking-tight"
                   style={{ color: "var(--text)" }}
                 >
                   Screening Review
                 </h1>
-                <p style={{ color: "var(--text-muted)" }}>
+                <p className="text-sm" style={{ color: "var(--text-muted)" }}>
                   {getStudentDisplay()} • {formatDate(screening.created_at)}
                 </p>
               </div>
@@ -233,7 +233,7 @@ export default function ScreeningDetailPage({
                 >
                   Response Details
                 </h2>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>
+                <p className="text-sm" style={{ color: "var(--text-muted)" }}>
                   View the student&apos;s individual answers to screening
                   questions
                 </p>
@@ -306,9 +306,7 @@ export default function ScreeningDetailPage({
                   >
                     Review Notes
                   </h2>
-                  <p
-                    style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}
-                  >
+                  <p className="text-sm" style={{ color: "var(--text-muted)" }}>
                     Add your observations and recommendations for this screening
                   </p>
                 </div>
@@ -344,7 +342,7 @@ export default function ScreeningDetailPage({
                 >
                   Actions
                 </h2>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>
+                <p className="text-sm" style={{ color: "var(--text-muted)" }}>
                   Choose how you would like to proceed with this case
                 </p>
               </div>
