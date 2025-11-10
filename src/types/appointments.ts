@@ -109,6 +109,7 @@ export interface AvailableTimeSlot {
   start_time: string;
   end_time: string;
   duration_minutes: number;
+  appointment_timestamp: string; // Full timestamp in format "YYYY-MM-DD HH:MM:SS" for accurate booking
 }
 
 // Day name helper

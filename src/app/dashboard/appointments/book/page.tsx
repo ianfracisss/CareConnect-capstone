@@ -114,14 +114,12 @@ export default function BookAppointmentPage() {
     try {
       setLoading(true);
 
-      const appointmentDate = new Date(
-        `${selectedSlot.date}T${selectedSlot.start_time}`
-      );
-
+      // Use the appointment_timestamp from the slot for accurate booking
+      // This preserves the exact time in the database timezone (Philippines)
       const result = await createAppointment({
         student_id: userId,
         psg_member_id: selectedSlot.psg_member_id,
-        appointment_date: appointmentDate.toISOString(),
+        appointment_date: selectedSlot.appointment_timestamp,
         duration_minutes: selectedSlot.duration_minutes,
         location_type: "online",
         notes: notes || undefined,

@@ -338,6 +338,16 @@ export async function getAvailableTimeSlots(
             if (isAvailable) {
               const psgMember = (availability as PSGAvailabilityWithProfile)
                 .psg_member;
+
+              // Store the full timestamp for accurate booking
+              const year = currentSlot.getFullYear();
+              const month = String(currentSlot.getMonth() + 1).padStart(2, "0");
+              const day = String(currentSlot.getDate()).padStart(2, "0");
+              const hours = String(currentSlot.getHours()).padStart(2, "0");
+              const minutes = String(currentSlot.getMinutes()).padStart(2, "0");
+              const seconds = String(currentSlot.getSeconds()).padStart(2, "0");
+              const appointmentTimestampForBooking = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
               slots.push({
                 psg_member_id: availability.psg_member_id,
                 psg_member_name: psgMember.full_name,
@@ -349,6 +359,7 @@ export async function getAvailableTimeSlots(
                   .substring(0, 5),
                 end_time: nextSlot.toTimeString().split(" ")[0].substring(0, 5),
                 duration_minutes: durationMinutes,
+                appointment_timestamp: appointmentTimestampForBooking, // Add this for booking
               });
             }
           }
