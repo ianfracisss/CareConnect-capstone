@@ -181,8 +181,11 @@ export async function updateAppointment(
       return { success: false, error: "Unauthorized" };
     }
 
-    // Build update object
-    const updateData: any = { ...input };
+    // Build update object with type safety
+    const updateData: Partial<UpdateAppointmentInput> & {
+      cancelled_by?: string;
+      cancelled_at?: string;
+    } = { ...input };
 
     // If cancelling, add cancellation metadata
     if (input.status === "cancelled") {

@@ -17,40 +17,51 @@ import {
 export default function StudentAppointmentsPage() {
   const router = useRouter();
   const { showAlert } = useAlert();
-  const [userId, setUserId] = useState<string>("");
   const [appointments, setAppointments] = useState<AppointmentWithProfiles[]>(
     []
   );
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | "upcoming" | "past">("upcoming");
 
-  useEffect(() => {
-    loadAppointments();
-  }, []);
-
   const loadAppointments = async () => {
     try {
       const user = localStorage.getItem("userId");
       if (!user) {
-        showAlert("Please login first", "error");
+        showAlert({
+          message: "Please login first",
+          type: "error",
+          duration: 5000,
+        });
         router.push("/login");
         return;
       }
 
-      setUserId(user);
       const result = await getStudentAppointments(user);
 
       if (result.success && result.data) {
         setAppointments(result.data);
       } else {
-        showAlert(result.error || "Failed to load appointments", "error");
+        showAlert({
+          message: result.error || "Failed to load appointments",
+          type: "error",
+          duration: 5000,
+        });
       }
     } catch {
-      showAlert("An unexpected error occurred", "error");
+      showAlert({
+        message: "An unexpected error occurred",
+        type: "error",
+        duration: 5000,
+      });
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadAppointments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const filteredAppointments = appointments.filter((apt) => {
     const aptDate = new Date(apt.appointment_date);
