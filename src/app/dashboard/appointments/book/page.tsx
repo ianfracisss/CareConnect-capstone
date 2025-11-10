@@ -20,6 +20,10 @@ export default function BookAppointmentPage() {
     null
   );
   const [notes, setNotes] = useState("");
+  const [locationType, setLocationType] = useState<"online" | "in_person">(
+    "online"
+  );
+  const [meetingLink, setMeetingLink] = useState("");
 
   // Date range for slot search
   const today = new Date().toISOString().split("T")[0];
@@ -111,6 +115,16 @@ export default function BookAppointmentPage() {
       return;
     }
 
+    // Validate meeting link for online appointments
+    if (locationType === "online" && !meetingLink.trim()) {
+      showAlert({
+        message: "Please provide a meeting link for online appointments",
+        type: "error",
+        duration: 5000,
+      });
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -121,7 +135,8 @@ export default function BookAppointmentPage() {
         psg_member_id: selectedSlot.psg_member_id,
         appointment_date: selectedSlot.appointment_timestamp,
         duration_minutes: selectedSlot.duration_minutes,
-        location_type: "online",
+        location_type: locationType,
+        meeting_link: locationType === "online" ? meetingLink : undefined,
         notes: notes || undefined,
       });
 
@@ -408,6 +423,89 @@ export default function BookAppointmentPage() {
                     {selectedSlot.duration_minutes} minutes
                   </p>
                 </div>
+
+                <div>
+                  <label
+                    className="block mb-2 font-medium"
+                    style={{ color: "var(--text)" }}
+                  >
+                    Location Type
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setLocationType("online")}
+                      className="px-4 py-2 rounded-lg transition-all text-sm font-medium"
+                      style={{
+                        border:
+                          locationType === "online"
+                            ? "2px solid var(--primary)"
+                            : "1px solid var(--border-muted)",
+                        background:
+                          locationType === "online"
+                            ? "var(--primary-20)"
+                            : "var(--bg)",
+                        color:
+                          locationType === "online"
+                            ? "var(--primary)"
+                            : "var(--text)",
+                      }}
+                    >
+                      Online
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setLocationType("in_person")}
+                      className="px-4 py-2 rounded-lg transition-all text-sm font-medium"
+                      style={{
+                        border:
+                          locationType === "in_person"
+                            ? "2px solid var(--primary)"
+                            : "1px solid var(--border-muted)",
+                        background:
+                          locationType === "in_person"
+                            ? "var(--primary-20)"
+                            : "var(--bg)",
+                        color:
+                          locationType === "in_person"
+                            ? "var(--primary)"
+                            : "var(--text)",
+                      }}
+                    >
+                      In Person
+                    </button>
+                  </div>
+                </div>
+
+                {locationType === "online" && (
+                  <div>
+                    <label
+                      className="block mb-2 font-medium"
+                      style={{ color: "var(--text)" }}
+                    >
+                      Meeting Link{" "}
+                      <span style={{ color: "var(--error)" }}>*</span>
+                    </label>
+                    <input
+                      type="url"
+                      value={meetingLink}
+                      onChange={(e) => setMeetingLink(e.target.value)}
+                      placeholder="https://meet.google.com/..."
+                      className="w-full px-4 py-2 rounded-lg"
+                      style={{
+                        border: "1px solid var(--border-muted)",
+                        background: "var(--bg)",
+                        color: "var(--text)",
+                      }}
+                    />
+                    <p
+                      className="text-xs mt-1"
+                      style={{ color: "var(--text-muted)" }}
+                    >
+                      Google Meet, Zoom, or any video conferencing link
+                    </p>
+                  </div>
+                )}
 
                 <div>
                   <label

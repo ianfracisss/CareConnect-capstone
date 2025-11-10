@@ -200,22 +200,24 @@ export default async function DashboardPage() {
                   </div>
                 </div>
 
-                <div
-                  className="rounded-lg p-6 opacity-60"
+                {/* Book Appointments - Active */}
+                <Link
+                  href="/dashboard/appointments"
+                  className="group rounded-lg p-6 transition-all hover:scale-105"
                   style={{
                     background: "var(--bg-light)",
-                    border: "1px solid var(--border-muted)",
+                    border: "2px solid var(--info)",
                     boxShadow: "0 2px 16px 0 var(--border-muted)",
                   }}
                 >
                   <div className="flex items-start gap-4">
                     <div
                       className="p-3 rounded-lg"
-                      style={{ background: "var(--bg-secondary)" }}
+                      style={{ background: "var(--info-bg)" }}
                     >
                       <Calendar
                         className="w-6 h-6"
-                        style={{ color: "var(--text-muted)" }}
+                        style={{ color: "var(--info)" }}
                       />
                     </div>
                     <div className="flex-1">
@@ -223,7 +225,7 @@ export default async function DashboardPage() {
                         className="font-semibold text-lg mb-1"
                         style={{ color: "var(--text)" }}
                       >
-                        Book Appointments
+                        My Appointments
                       </h3>
                       <p
                         className="text-sm"
@@ -234,15 +236,15 @@ export default async function DashboardPage() {
                       <span
                         className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
                         style={{
-                          background: "var(--bg-secondary)",
-                          color: "var(--text-muted)",
+                          background: "var(--info-bg)",
+                          color: "var(--info)",
                         }}
                       >
-                        Coming Soon
+                        Available Now
                       </span>
                     </div>
                   </div>
-                </div>
+                </Link>
 
                 <div
                   className="rounded-lg p-6 opacity-60"
