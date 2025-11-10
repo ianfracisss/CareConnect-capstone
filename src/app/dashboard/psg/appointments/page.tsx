@@ -184,7 +184,7 @@ export default function PSGAppointmentsPage() {
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1
-              className="text-3xl font-bold mb-2"
+              className="text-base font-bold mb-2"
               style={{ color: "var(--text)" }}
             >
               My Appointments
@@ -280,7 +280,7 @@ export default function PSGAppointmentsPage() {
                     <div className="flex items-center gap-3 mb-3">
                       <User size={20} style={{ color: "var(--text-muted)" }} />
                       <h3
-                        className="text-xl font-semibold"
+                        className="text-base font-bold"
                         style={{ color: "var(--text)" }}
                       >
                         {apt.student.full_name}

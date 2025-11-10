@@ -118,7 +118,7 @@ export default function StudentAppointmentsPage() {
       />
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold" style={{ color: "var(--text)" }}>
+          <h1 className="text-lg font-bold" style={{ color: "var(--text)" }}>
             My Appointments
           </h1>
           <Link
@@ -192,7 +192,7 @@ export default function StudentAppointmentsPage() {
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <h3
-                        className="text-2xl font-semibold"
+                        className="text-base font-bold"
                         style={{ color: "var(--text)" }}
                       >
                         {apt.psg_member.full_name}

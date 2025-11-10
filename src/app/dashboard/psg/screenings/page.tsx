@@ -160,7 +160,7 @@ export default function PSGScreeningsPage() {
             {/* Header */}
             <div className="space-y-2">
               <h1
-                className="text-3xl font-bold tracking-tight"
+                className="text-base font-bold tracking-tight"
                 style={{ color: "var(--text)" }}
               >
                 Student Screenings
@@ -194,7 +194,7 @@ export default function PSGScreeningsPage() {
                 </div>
                 <div>
                   <div
-                    className="text-2xl font-bold"
+                    className="text-base font-bold"
                     style={{ color: "var(--text)" }}
                   >
                     {pendingCount}
@@ -227,7 +227,7 @@ export default function PSGScreeningsPage() {
                 </div>
                 <div>
                   <div
-                    className="text-2xl font-bold"
+                    className="text-base font-bold"
                     style={{ color: "var(--text)" }}
                   >
                     {highRiskCount}
@@ -260,7 +260,7 @@ export default function PSGScreeningsPage() {
                 </div>
                 <div>
                   <div
-                    className="text-2xl font-bold"
+                    className="text-base font-bold"
                     style={{ color: "var(--text)" }}
                   >
                     {reviewedCount}
@@ -286,7 +286,7 @@ export default function PSGScreeningsPage() {
                 style={{ borderColor: "var(--border-muted)" }}
               >
                 <h2
-                  className="text-lg font-semibold"
+                  className="text-base font-bold"
                   style={{ color: "var(--text)" }}
                 >
                   Screening Results

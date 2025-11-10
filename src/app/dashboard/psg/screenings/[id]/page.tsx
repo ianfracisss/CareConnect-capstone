@@ -145,7 +145,7 @@ export default function ScreeningDetailPage({
                 style={{ color: "var(--error)" }}
               />
               <h2
-                className="text-xl font-semibold mb-2"
+                className="text-base font-bold mb-2"
                 style={{ color: "var(--text)" }}
               >
                 {error || "Screening not found"}
@@ -184,7 +184,7 @@ export default function ScreeningDetailPage({
             <div className="flex items-center justify-between">
               <div>
                 <h1
-                  className="text-2xl font-bold tracking-tight"
+                  className="text-base font-bold tracking-tight"
                   style={{ color: "var(--text)" }}
                 >
                   Screening Review
@@ -236,7 +236,7 @@ export default function ScreeningDetailPage({
             >
               <div>
                 <h2
-                  className="text-xl font-semibold"
+                  className="text-base font-bold"
                   style={{ color: "var(--text)" }}
                 >
                   Response Details
@@ -309,7 +309,7 @@ export default function ScreeningDetailPage({
               >
                 <div className="mb-4">
                   <h2
-                    className="text-xl font-semibold"
+                    className="text-base font-bold"
                     style={{ color: "var(--text)" }}
                   >
                     Review Notes
@@ -345,7 +345,7 @@ export default function ScreeningDetailPage({
             >
               <div>
                 <h2
-                  className="text-xl font-semibold"
+                  className="text-base font-bold"
                   style={{ color: "var(--text)" }}
                 >
                   Actions

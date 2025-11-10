@@ -169,7 +169,7 @@ export default function AppointmentDetailPage({ params }: PageProps) {
           }}
         >
           <div className="flex justify-between items-start mb-6">
-            <h1 className="text-3xl font-bold" style={{ color: "var(--text)" }}>
+            <h1 className="text-lg font-bold" style={{ color: "var(--text)" }}>
               Appointment Details
             </h1>
             <span
@@ -193,7 +193,7 @@ export default function AppointmentDetailPage({ params }: PageProps) {
           {/* PSG Member Info */}
           <div className="mb-8">
             <h2
-              className="text-xl font-semibold mb-4"
+              className="text-base font-bold mb-4"
               style={{ color: "var(--text)" }}
             >
               PSG Member
@@ -227,7 +227,7 @@ export default function AppointmentDetailPage({ params }: PageProps) {
           {/* Appointment Info */}
           <div className="mb-8">
             <h2
-              className="text-xl font-semibold mb-4"
+              className="text-base font-bold mb-4"
               style={{ color: "var(--text)" }}
             >
               Appointment Information
@@ -405,7 +405,7 @@ export default function AppointmentDetailPage({ params }: PageProps) {
           {appointment.notes && (
             <div className="mb-8">
               <h2
-                className="text-xl font-semibold mb-4"
+                className="text-base font-bold mb-4"
                 style={{ color: "var(--text)" }}
               >
                 Notes
@@ -426,7 +426,7 @@ export default function AppointmentDetailPage({ params }: PageProps) {
           {appointment.cancellation_reason && (
             <div className="mb-8">
               <h2
-                className="text-xl font-semibold mb-4"
+                className="text-base font-bold mb-4"
                 style={{ color: "var(--text)" }}
               >
                 Cancellation Details
@@ -482,7 +482,7 @@ export default function AppointmentDetailPage({ params }: PageProps) {
               }}
             >
               <h3
-                className="text-xl font-semibold mb-4"
+                className="text-base font-bold mb-4"
                 style={{ color: "var(--text)" }}
               >
                 Cancel Appointment

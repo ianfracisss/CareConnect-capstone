@@ -192,7 +192,7 @@ export default function BookAppointmentPage() {
       />
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         <h1
-          className="text-3xl font-bold mb-6"
+          className="text-base font-bold mb-6"
           style={{ color: "var(--text)" }}
         >
           Book an Appointment
@@ -207,7 +207,7 @@ export default function BookAppointmentPage() {
           }}
         >
           <h2
-            className="text-2xl font-semibold mb-4"
+            className="text-base font-bold mb-4"
             style={{ color: "var(--text)" }}
           >
             Select Date Range
@@ -280,7 +280,7 @@ export default function BookAppointmentPage() {
             }}
           >
             <h2
-              className="text-xl font-semibold mb-4"
+              className="text-base font-bold mb-4"
               style={{ color: "var(--text)" }}
             >
               Available Time Slots
@@ -368,7 +368,7 @@ export default function BookAppointmentPage() {
             }}
           >
             <h2
-              className="text-xl font-semibold mb-4"
+              className="text-base font-bold mb-4"
               style={{ color: "var(--text)" }}
             >
               Booking Summary

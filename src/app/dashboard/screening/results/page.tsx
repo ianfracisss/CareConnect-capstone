@@ -159,7 +159,7 @@ export default function ScreeningResultsPage() {
             {/* Centered Header Above Card */}
             <div className="flex flex-col items-center mb-2">
               <h1
-                className="text-2xl font-bold tracking-tight text-center"
+                className="text-base font-bold tracking-tight text-center"
                 style={{ color: "var(--text)" }}
               >
                 Screening Results
@@ -185,7 +185,7 @@ export default function ScreeningResultsPage() {
               >
                 <div>
                   <h2
-                    className="text-lg font-semibold"
+                    className="text-base font-bold"
                     style={{ color: "var(--text)" }}
                   >
                     Next Steps

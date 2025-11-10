@@ -122,7 +122,7 @@ export default function LoginPage() {
         >
           <div className="text-center mb-8">
             <h2
-              className="text-3xl font-bold mb-2"
+              className="text-base font-bold mb-2"
               style={{ color: "var(--text)" }}
             >
               Welcome Back

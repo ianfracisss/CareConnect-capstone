@@ -217,7 +217,7 @@ export default function PSGAvailabilityPage() {
       />
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold" style={{ color: "var(--text)" }}>
+          <h1 className="text-lg font-bold" style={{ color: "var(--text)" }}>
             My Availability
           </h1>
           {!showForm && (
@@ -244,7 +244,7 @@ export default function PSGAvailabilityPage() {
             }}
           >
             <h2
-              className="text-xl font-semibold mb-4"
+              className="text-base font-bold mb-4"
               style={{ color: "var(--text)" }}
             >
               {editingId ? "Edit Availability" : "Add Availability"}
@@ -358,7 +358,7 @@ export default function PSGAvailabilityPage() {
           }}
         >
           <h2
-            className="text-xl font-semibold mb-4"
+            className="text-base font-bold mb-4"
             style={{ color: "var(--text)" }}
           >
             Current Schedule
