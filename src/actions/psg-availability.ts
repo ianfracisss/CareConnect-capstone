@@ -301,8 +301,8 @@ export async function getAvailableTimeSlots(
           nextSlot.setMinutes(currentSlot.getMinutes() + durationMinutes);
 
           if (nextSlot <= slotEnd) {
-            // Format the date and time separately to avoid timezone issues
-            // The database expects times in local timezone (matching start_time/end_time)
+            // Format the date and time with explicit timezone for Asia/Manila (UTC+8)
+            // PostgreSQL TIMESTAMP WITH TIME ZONE requires proper format
             const year = currentSlot.getFullYear();
             const month = String(currentSlot.getMonth() + 1).padStart(2, "0");
             const day = String(currentSlot.getDate()).padStart(2, "0");
@@ -310,8 +310,8 @@ export async function getAvailableTimeSlots(
             const minutes = String(currentSlot.getMinutes()).padStart(2, "0");
             const seconds = String(currentSlot.getSeconds()).padStart(2, "0");
 
-            // Create timestamp without timezone conversion
-            const appointmentTimestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+            // Create timestamp with Asia/Manila timezone
+            const appointmentTimestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}+08:00`;
 
             // Check if this slot is available (no conflicts)
             const { data: isAvailable, error: rpcError } = await supabase.rpc(
@@ -339,14 +339,15 @@ export async function getAvailableTimeSlots(
               const psgMember = (availability as PSGAvailabilityWithProfile)
                 .psg_member;
 
-              // Store the full timestamp for accurate booking
+              // Store the full timestamp for accurate booking with timezone
               const year = currentSlot.getFullYear();
               const month = String(currentSlot.getMonth() + 1).padStart(2, "0");
               const day = String(currentSlot.getDate()).padStart(2, "0");
               const hours = String(currentSlot.getHours()).padStart(2, "0");
               const minutes = String(currentSlot.getMinutes()).padStart(2, "0");
               const seconds = String(currentSlot.getSeconds()).padStart(2, "0");
-              const appointmentTimestampForBooking = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+              // Include +08:00 timezone for Asia/Manila (Philippines)
+              const appointmentTimestampForBooking = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}+08:00`;
 
               slots.push({
                 psg_member_id: availability.psg_member_id,
