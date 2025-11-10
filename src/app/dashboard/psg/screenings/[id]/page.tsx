@@ -4,7 +4,7 @@ import { use, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { DashboardClientWrapper } from "@/components/DashboardClientWrapper";
 import { DashboardNavbar } from "@/components/DashboardNavbar";
-import { AlertCircle, CheckCircle, Loader2 } from "lucide-react";
+import { AlertCircle, CheckCircle } from "lucide-react";
 import { ScreeningResultDisplay } from "@/components/screening/ScreeningResultDisplay";
 import { ScreeningResult, ScreeningResponse } from "@/lib/types/screening";
 import {
@@ -12,6 +12,7 @@ import {
   updateScreeningReview,
 } from "@/lib/actions/screening";
 import { useAlert } from "@/components/AlertProvider";
+import { Loader } from "@/components/Loader";
 
 export default function ScreeningDetailPage({
   params,
@@ -118,10 +119,7 @@ export default function ScreeningDetailPage({
           <DashboardNavbar subtitle="PSG Member Portal" showHomeButton={true} />
           <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="flex items-center justify-center py-12">
-              <Loader2
-                className="h-8 w-8 animate-spin"
-                style={{ color: "var(--primary)" }}
-              />
+              <Loader text="Loading screening details..." />
             </div>
           </main>
         </div>

@@ -17,6 +17,13 @@
   --warning: hsl(52 19% 57%);
   --success: hsl(146 17% 59%);
   --info: hsl(217 28% 65%);
+  --error: hsl(9 26% 64%);
+  --bg-secondary: hsl(300 0% 14%);
+  --success-bg: hsl(146 17% 20%);
+  --error-bg: hsl(9 26% 20%);
+  --warning-bg: hsl(52 19% 20%);
+  --info-bg: hsl(217 28% 20%);
+  --primary-20: hsl(111 33% 20%);
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -64,6 +71,13 @@
   --warning: hsl(52 90% 50%);
   --success: hsl(146 50% 45%);
   --info: hsl(217 70% 55%);
+  --error: hsl(9 70% 55%);
+  --bg-secondary: hsl(0 0% 95%);
+  --success-bg: hsl(146 50% 90%);
+  --error-bg: hsl(9 70% 90%);
+  --warning-bg: hsl(52 90% 90%);
+  --info-bg: hsl(217 70% 90%);
+  --primary-20: hsl(111 33% 90%);
 }
 
 @theme inline {

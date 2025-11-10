@@ -13,8 +13,8 @@ import {
   submitScreening,
   getScreeningQuestions,
 } from "@/lib/actions/screening";
-import { Loader2 } from "lucide-react";
 import { useAlert } from "@/components/AlertProvider";
+import { Loader } from "@/components/Loader";
 
 export default function TakeScreeningPage() {
   const [questions, setQuestions] = useState<ScreeningQuestion[]>([]);
@@ -79,10 +79,7 @@ export default function TakeScreeningPage() {
         <div className="min-h-screen" style={{ background: "var(--bg)" }}>
           <DashboardNavbar showHomeButton={true} />
           <div className="flex items-center justify-center py-12">
-            <Loader2
-              className="w-8 h-8 animate-spin"
-              style={{ color: "var(--primary)" }}
-            />
+            <Loader text="Loading screening questions..." />
           </div>
         </div>
       </DashboardClientWrapper>
