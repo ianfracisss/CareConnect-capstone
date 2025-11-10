@@ -194,53 +194,145 @@ export async function getAvailableTimeSlots(
       return { success: false, error: "Failed to fetch availabilities" };
     }
 
+    if (!availabilities || availabilities.length === 0) {
+      console.log("No active availabilities found");
+      return { success: true, data: [] };
+    }
+
+    console.log("Found availabilities:", availabilities.length);
+
     // Generate time slots
     const slots: AvailableTimeSlot[] = [];
-    const start = new Date(startDate);
-    const end = new Date(endDate);
+    const start = new Date(startDate + "T00:00:00");
+    const end = new Date(endDate + "T23:59:59");
+
+    console.log("Date range:", start, "to", end);
 
     // Iterate through each day in the range
-    for (
-      let date = new Date(start);
-      date <= end;
-      date.setDate(date.getDate() + 1)
-    ) {
-      const dayOfWeek = date.getDay();
+    const currentDate = new Date(start);
+    while (currentDate <= end) {
+      const dayOfWeek = currentDate.getDay();
+      console.log(
+        "Checking date:",
+        currentDate.toISOString().split("T")[0],
+        "day:",
+        dayOfWeek
+      );
+
+      console.log(
+        "Checking date:",
+        currentDate.toISOString().split("T")[0],
+        "day:",
+        dayOfWeek
+      );
 
       // Find availabilities for this day of week
       const dayAvailabilities =
-        availabilities?.filter((av) => av.day_of_week === dayOfWeek) || [];
+        availabilities?.filter((av) => {
+          console.log(
+            "Availability day_of_week:",
+            av.day_of_week,
+            "comparing to:",
+            dayOfWeek
+          );
+          return av.day_of_week === dayOfWeek;
+        }) || [];
+
+      console.log("Day availabilities found:", dayAvailabilities.length);
 
       for (const availability of dayAvailabilities) {
-        // Generate slots within the availability window
-        const [startHour, startMinute] = availability.start_time
+        // Parse time strings (format: "HH:MM:SS")
+        const [startHour, startMinute, startSecond] = availability.start_time
           .split(":")
           .map(Number);
-        const [endHour, endMinute] = availability.end_time
+        const [endHour, endMinute, endSecond] = availability.end_time
           .split(":")
           .map(Number);
 
-        const slotStart = new Date(date);
-        slotStart.setHours(startHour, startMinute, 0, 0);
+        // Create date objects in local timezone for the current date
+        const slotStart = new Date(currentDate);
+        slotStart.setHours(startHour, startMinute, startSecond || 0, 0);
 
-        const slotEnd = new Date(date);
-        slotEnd.setHours(endHour, endMinute, 0, 0);
+        const slotEnd = new Date(currentDate);
+        slotEnd.setHours(endHour, endMinute, endSecond || 0, 0);
+
+        const now = new Date();
+        console.log(
+          "Slot window (UTC):",
+          slotStart.toISOString(),
+          "to",
+          slotEnd.toISOString()
+        );
+        console.log(
+          "Slot window (local):",
+          slotStart.toLocaleString(),
+          "to",
+          slotEnd.toLocaleString()
+        );
+        console.log(
+          "Current time (now):",
+          now.toISOString(),
+          "(local:",
+          now.toLocaleString() + ")"
+        );
+
+        // Skip if slot is in the past
+        if (slotEnd <= now) {
+          console.log("Skipping past slot - slot ends before now");
+          continue;
+        }
 
         // Generate slots every hour (or specified duration)
         let currentSlot = new Date(slotStart);
+
+        // If start time is in the past, start from next available hour
+        if (currentSlot < now) {
+          const minutesFromNow = Math.ceil(
+            (now.getTime() - currentSlot.getTime()) / (1000 * 60)
+          );
+          const slotsToSkip = Math.ceil(minutesFromNow / durationMinutes);
+          currentSlot.setMinutes(
+            currentSlot.getMinutes() + slotsToSkip * durationMinutes
+          );
+        }
+
         while (currentSlot < slotEnd) {
           const nextSlot = new Date(currentSlot);
           nextSlot.setMinutes(currentSlot.getMinutes() + durationMinutes);
 
           if (nextSlot <= slotEnd) {
+            // Format the date and time separately to avoid timezone issues
+            // The database expects times in local timezone (matching start_time/end_time)
+            const year = currentSlot.getFullYear();
+            const month = String(currentSlot.getMonth() + 1).padStart(2, "0");
+            const day = String(currentSlot.getDate()).padStart(2, "0");
+            const hours = String(currentSlot.getHours()).padStart(2, "0");
+            const minutes = String(currentSlot.getMinutes()).padStart(2, "0");
+            const seconds = String(currentSlot.getSeconds()).padStart(2, "0");
+
+            // Create timestamp without timezone conversion
+            const appointmentTimestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
             // Check if this slot is available (no conflicts)
-            const { data: isAvailable } = await supabase.rpc(
+            const { data: isAvailable, error: rpcError } = await supabase.rpc(
               "is_psg_available",
               {
                 p_psg_member_id: availability.psg_member_id,
-                p_appointment_date: currentSlot.toISOString(),
+                p_appointment_date: appointmentTimestamp,
                 p_duration_minutes: durationMinutes,
               }
+            );
+
+            if (rpcError) {
+              console.error("RPC error:", rpcError);
+            }
+
+            console.log(
+              "Slot availability check:",
+              appointmentTimestamp,
+              "(ISO:",
+              currentSlot.toISOString() + ") Available:",
+              isAvailable
             );
 
             if (isAvailable) {
@@ -264,8 +356,12 @@ export async function getAvailableTimeSlots(
           currentSlot = nextSlot;
         }
       }
+
+      // Move to next day
+      currentDate.setDate(currentDate.getDate() + 1);
     }
 
+    console.log("Total slots generated:", slots.length);
     return { success: true, data: slots };
   } catch (error) {
     console.error("Unexpected error:", error);
