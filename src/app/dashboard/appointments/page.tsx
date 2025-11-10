@@ -192,7 +192,7 @@ export default function StudentAppointmentsPage() {
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <h3
-                        className="text-xl font-semibold"
+                        className="text-2xl font-semibold"
                         style={{ color: "var(--text)" }}
                       >
                         {apt.psg_member.full_name}

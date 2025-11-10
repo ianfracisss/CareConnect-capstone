@@ -252,7 +252,7 @@ export default function PSGAvailabilityPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label
-                  className="block mb-2 font-medium"
+                  className="block mb-2 text-sm font-medium"
                   style={{ color: "var(--text)" }}
                 >
                   Day of Week
@@ -281,7 +281,7 @@ export default function PSGAvailabilityPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label
-                    className="block mb-2 font-medium"
+                    className="block mb-2 text-sm font-medium"
                     style={{ color: "var(--text)" }}
                   >
                     Start Time
@@ -301,7 +301,7 @@ export default function PSGAvailabilityPage() {
                 </div>
                 <div>
                   <label
-                    className="block mb-2 font-medium"
+                    className="block mb-2 text-sm font-medium"
                     style={{ color: "var(--text)" }}
                   >
                     End Time

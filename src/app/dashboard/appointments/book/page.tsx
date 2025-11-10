@@ -207,7 +207,7 @@ export default function BookAppointmentPage() {
           }}
         >
           <h2
-            className="text-xl font-semibold mb-4"
+            className="text-2xl font-semibold mb-4"
             style={{ color: "var(--text)" }}
           >
             Select Date Range
@@ -215,7 +215,7 @@ export default function BookAppointmentPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label
-                className="block mb-2 font-medium"
+                className="block mb-2 text-sm font-medium"
                 style={{ color: "var(--text)" }}
               >
                 Start Date
@@ -235,7 +235,7 @@ export default function BookAppointmentPage() {
             </div>
             <div>
               <label
-                className="block mb-2 font-medium"
+                className="block mb-2 text-sm font-medium"
                 style={{ color: "var(--text)" }}
               >
                 End Date
@@ -426,7 +426,7 @@ export default function BookAppointmentPage() {
 
                 <div>
                   <label
-                    className="block mb-2 font-medium"
+                    className="block mb-2 text-sm font-medium"
                     style={{ color: "var(--text)" }}
                   >
                     Location Type
@@ -480,7 +480,7 @@ export default function BookAppointmentPage() {
                 {locationType === "online" && (
                   <div>
                     <label
-                      className="block mb-2 font-medium"
+                      className="block mb-2 text-sm font-medium"
                       style={{ color: "var(--text)" }}
                     >
                       Meeting Link{" "}
@@ -509,7 +509,7 @@ export default function BookAppointmentPage() {
 
                 <div>
                   <label
-                    className="block mb-2 font-medium"
+                    className="block mb-2 text-sm font-medium"
                     style={{ color: "var(--text)" }}
                   >
                     Notes (Optional)
