@@ -26,16 +26,16 @@ export default function PSGAvailabilityPage() {
   const [startTime, setStartTime] = useState("09:00");
   const [endTime, setEndTime] = useState("17:00");
 
-  useEffect(() => {
-    loadAvailability();
-  }, []);
-
   const loadAvailability = async () => {
     try {
       // Get current user from localStorage or API
       const user = localStorage.getItem("userId");
       if (!user) {
-        showAlert("Please login first", "error");
+        showAlert({
+          message: "Please login first",
+          type: "error",
+          duration: 5000,
+        });
         router.push("/login");
         return;
       }
@@ -46,20 +46,37 @@ export default function PSGAvailabilityPage() {
       if (result.success && result.data) {
         setAvailabilities(result.data);
       } else {
-        showAlert(result.error || "Failed to load availability", "error");
+        showAlert({
+          message: result.error || "Failed to load availability",
+          type: "error",
+          duration: 5000,
+        });
       }
-    } catch (error) {
-      showAlert("An unexpected error occurred", "error");
+    } catch {
+      showAlert({
+        message: "An unexpected error occurred",
+        type: "error",
+        duration: 5000,
+      });
     } finally {
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    loadAvailability();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (endTime <= startTime) {
-      showAlert("End time must be after start time", "error");
+      showAlert({
+        message: "End time must be after start time",
+        type: "error",
+        duration: 5000,
+      });
       return;
     }
 
@@ -75,11 +92,19 @@ export default function PSGAvailabilityPage() {
         });
 
         if (result.success) {
-          showAlert("Availability updated successfully", "success");
+          showAlert({
+            message: "Availability updated successfully",
+            type: "success",
+            duration: 5000,
+          });
           setEditingId(null);
           setShowForm(false);
         } else {
-          showAlert(result.error || "Failed to update availability", "error");
+          showAlert({
+            message: result.error || "Failed to update availability",
+            type: "error",
+            duration: 5000,
+          });
         }
       } else {
         // Create new
@@ -92,17 +117,29 @@ export default function PSGAvailabilityPage() {
         });
 
         if (result.success) {
-          showAlert("Availability added successfully", "success");
+          showAlert({
+            message: "Availability added successfully",
+            type: "success",
+            duration: 5000,
+          });
           setShowForm(false);
         } else {
-          showAlert(result.error || "Failed to add availability", "error");
+          showAlert({
+            message: result.error || "Failed to add availability",
+            type: "error",
+            duration: 5000,
+          });
         }
       }
 
       await loadAvailability();
       resetForm();
-    } catch (error) {
-      showAlert("An unexpected error occurred", "error");
+    } catch {
+      showAlert({
+        message: "An unexpected error occurred",
+        type: "error",
+        duration: 5000,
+      });
     } finally {
       setLoading(false);
     }
@@ -124,13 +161,25 @@ export default function PSGAvailabilityPage() {
       const result = await deletePSGAvailability(id);
 
       if (result.success) {
-        showAlert("Availability deleted successfully", "success");
+        showAlert({
+          message: "Availability deleted successfully",
+          type: "success",
+          duration: 5000,
+        });
         await loadAvailability();
       } else {
-        showAlert(result.error || "Failed to delete availability", "error");
+        showAlert({
+          message: result.error || "Failed to delete availability",
+          type: "error",
+          duration: 5000,
+        });
       }
-    } catch (error) {
-      showAlert("An unexpected error occurred", "error");
+    } catch {
+      showAlert({
+        message: "An unexpected error occurred",
+        type: "error",
+        duration: 5000,
+      });
     } finally {
       setLoading(false);
     }
