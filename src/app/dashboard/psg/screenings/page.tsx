@@ -160,7 +160,7 @@ export default function PSGScreeningsPage() {
             {/* Header */}
             <div className="space-y-2">
               <h1
-                className="text-3xl font-bold tracking-tight"
+                className="text-base font-bold tracking-tight"
                 style={{ color: "var(--text)" }}
               >
                 Student Screenings
@@ -173,11 +173,12 @@ export default function PSGScreeningsPage() {
             {/* Summary Cards */}
             <div className="grid gap-4 md:grid-cols-3">
               <div
-                className="rounded-lg p-6"
+                className="rounded-lg p-6 transition-shadow hover:shadow-[0_4px_16px_rgba(0,0,0,0.1),0_2px_8px_rgba(0,0,0,0.06)]"
                 style={{
                   background: "var(--bg-light)",
                   border: "1px solid var(--border-muted)",
-                  boxShadow: "0 2px 16px 0 var(--border-muted)",
+                  boxShadow:
+                    "0 1px 2px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.015)",
                 }}
               >
                 <div className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -194,7 +195,7 @@ export default function PSGScreeningsPage() {
                 </div>
                 <div>
                   <div
-                    className="text-2xl font-bold"
+                    className="text-base font-bold"
                     style={{ color: "var(--text)" }}
                   >
                     {pendingCount}
@@ -206,11 +207,12 @@ export default function PSGScreeningsPage() {
               </div>
 
               <div
-                className="rounded-lg p-6"
+                className="rounded-lg p-6 transition-shadow hover:shadow-[0_4px_16px_rgba(0,0,0,0.1),0_2px_8px_rgba(0,0,0,0.06)]"
                 style={{
                   background: "var(--bg-light)",
                   border: "1px solid var(--border-muted)",
-                  boxShadow: "0 2px 16px 0 var(--border-muted)",
+                  boxShadow:
+                    "0 1px 2px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.015)",
                 }}
               >
                 <div className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -227,7 +229,7 @@ export default function PSGScreeningsPage() {
                 </div>
                 <div>
                   <div
-                    className="text-2xl font-bold"
+                    className="text-base font-bold"
                     style={{ color: "var(--text)" }}
                   >
                     {highRiskCount}
@@ -239,11 +241,12 @@ export default function PSGScreeningsPage() {
               </div>
 
               <div
-                className="rounded-lg p-6"
+                className="rounded-lg p-6 transition-shadow hover:shadow-[0_4px_16px_rgba(0,0,0,0.1),0_2px_8px_rgba(0,0,0,0.06)]"
                 style={{
                   background: "var(--bg-light)",
                   border: "1px solid var(--border-muted)",
-                  boxShadow: "0 2px 16px 0 var(--border-muted)",
+                  boxShadow:
+                    "0 1px 2px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.015)",
                 }}
               >
                 <div className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -260,7 +263,7 @@ export default function PSGScreeningsPage() {
                 </div>
                 <div>
                   <div
-                    className="text-2xl font-bold"
+                    className="text-base font-bold"
                     style={{ color: "var(--text)" }}
                   >
                     {reviewedCount}
@@ -278,7 +281,8 @@ export default function PSGScreeningsPage() {
               style={{
                 background: "var(--bg-light)",
                 border: "1px solid var(--border-muted)",
-                boxShadow: "0 2px 16px 0 var(--border-muted)",
+                boxShadow:
+                  "0 1px 2px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.015)",
               }}
             >
               <div
@@ -286,7 +290,7 @@ export default function PSGScreeningsPage() {
                 style={{ borderColor: "var(--border-muted)" }}
               >
                 <h2
-                  className="text-lg font-semibold"
+                  className="text-base font-bold"
                   style={{ color: "var(--text)" }}
                 >
                   Screening Results

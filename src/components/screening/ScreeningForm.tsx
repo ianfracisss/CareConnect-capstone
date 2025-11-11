@@ -150,10 +150,10 @@ export function ScreeningForm({ questions, onSubmit }: ScreeningFormProps) {
 
       {/* Question Card */}
       <div
-        className="p-8 rounded-lg mb-6"
+        className="p-8 rounded-lg mb-6 shadow-[0_1px_2px_rgba(0,0,0,0.3),0_1px_2px_rgba(0,0,0,0.03),0_2px_4px_rgba(0,0,0,0.015)]"
         style={{
           background: "var(--bg-light)",
-          boxShadow: "0 2px 16px 0 var(--border-muted)",
+          border: "1px solid var(--border-muted)",
         }}
       >
         <h3
@@ -324,11 +324,11 @@ export function ScreeningForm({ questions, onSubmit }: ScreeningFormProps) {
         <button
           onClick={handlePrevious}
           disabled={currentStep === 0}
-          className="px-6 py-2.5 rounded-lg font-medium transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-6 py-2.5 rounded-lg font-medium transition disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_1px_2px_rgba(0,0,0,0.1)]"
           style={{
             background: "var(--bg-light)",
             color: "var(--text)",
-            border: "1px solid var(--border)",
+            border: "1px solid var(--border-muted)",
           }}
         >
           Previous
@@ -338,7 +338,7 @@ export function ScreeningForm({ questions, onSubmit }: ScreeningFormProps) {
           <button
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="px-6 py-2.5 rounded-lg font-medium transition disabled:opacity-50 flex items-center gap-2"
+            className="px-6 py-2.5 rounded-lg font-medium transition disabled:opacity-50 flex items-center gap-2 shadow-[0_1px_3px_rgba(0,0,0,0.2),0_1px_2px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_6px_rgba(0,0,0,0.25),0_2px_4px_rgba(0,0,0,0.08)]"
             style={{
               background: "var(--primary)",
               color: "var(--bg-dark)",
@@ -356,7 +356,7 @@ export function ScreeningForm({ questions, onSubmit }: ScreeningFormProps) {
         ) : (
           <button
             onClick={handleNext}
-            className="px-6 py-2.5 rounded-lg font-medium transition"
+            className="px-6 py-2.5 rounded-lg font-medium transition shadow-[0_1px_3px_rgba(0,0,0,0.2),0_1px_2px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_6px_rgba(0,0,0,0.25),0_2px_4px_rgba(0,0,0,0.08)]"
             style={{
               background: "var(--primary)",
               color: "var(--bg-dark)",

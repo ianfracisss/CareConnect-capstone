@@ -184,7 +184,7 @@ export default function PSGAppointmentsPage() {
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1
-              className="text-3xl font-bold mb-2"
+              className="text-base font-bold mb-2"
               style={{ color: "var(--text)" }}
             >
               My Appointments
@@ -198,7 +198,7 @@ export default function PSGAppointmentsPage() {
           </div>
           <Link
             href="/dashboard/psg/availability"
-            className="px-6 py-2 rounded-lg hover:opacity-90 transition-all"
+            className="px-6 py-2 rounded-lg shadow-[0_1px_3px_rgba(0,0,0,0.2),0_1px_2px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_6px_rgba(0,0,0,0.25),0_2px_4px_rgba(0,0,0,0.08)] hover:opacity-90 transition-all"
             style={{ background: "var(--primary)", color: "var(--bg-dark)" }}
           >
             Manage Availability
@@ -219,7 +219,7 @@ export default function PSGAppointmentsPage() {
             <button
               key={tab.key}
               onClick={() => setFilter(tab.key)}
-              className="px-4 py-2 font-medium transition-all relative"
+              className="px-4 py-2 font-medium transition-all relative hover:opacity-80"
               style={{
                 borderBottom:
                   filter === tab.key ? "2px solid var(--primary)" : "none",
@@ -269,118 +269,191 @@ export default function PSGAppointmentsPage() {
             filteredAppointments.map((apt) => (
               <div
                 key={apt.id}
-                className="rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow"
+                className="rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.3),0_1px_2px_rgba(0,0,0,0.03),0_2px_4px_rgba(0,0,0,0.015)] p-6 hover:shadow-[0_2px_4px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.03),0_4px_8px_rgba(0,0,0,0.02)] transition-shadow"
                 style={{
                   background: "var(--bg-light)",
                   border: "1px solid var(--border-muted)",
                 }}
               >
-                <div className="flex justify-between items-start mb-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-3">
-                      <User size={20} style={{ color: "var(--text-muted)" }} />
+                {/* Header with Name and Status */}
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="p-2 rounded-lg"
+                      style={{ background: "var(--primary-20)" }}
+                    >
+                      <User size={20} style={{ color: "var(--primary)" }} />
+                    </div>
+                    <div>
                       <h3
-                        className="text-xl font-semibold"
+                        className="text-base font-bold mb-1"
                         style={{ color: "var(--text)" }}
                       >
                         {apt.student.full_name}
                       </h3>
                       {apt.student.school_id && (
                         <span
-                          className="text-sm px-2 py-1 rounded"
+                          className="text-xs px-2 py-0.5 rounded"
                           style={{
                             background: "var(--bg-secondary)",
                             color: "var(--text-muted)",
                           }}
                         >
-                          {apt.student.school_id}
+                          ID: {apt.student.school_id}
                         </span>
                       )}
-                      <span
-                        className="px-3 py-1 rounded-full text-xs font-medium ml-auto"
-                        style={{
-                          background: getStatusColor(apt.status),
-                          color: "var(--bg-dark)",
-                        }}
-                      >
-                        {APPOINTMENT_STATUS_LABELS[apt.status]}
-                      </span>
                     </div>
+                  </div>
+                  <span
+                    className="px-3 py-1 rounded-full text-xs font-medium shadow-[0_1px_2px_rgba(0,0,0,0.15)]"
+                    style={{
+                      background: getStatusColor(apt.status),
+                      color: "var(--bg-dark)",
+                    }}
+                  >
+                    {APPOINTMENT_STATUS_LABELS[apt.status]}
+                  </span>
+                </div>
 
-                    <div
-                      className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4"
-                      style={{ color: "var(--text-muted)" }}
-                    >
-                      <div className="flex items-center gap-2">
-                        <Calendar size={18} />
-                        <span>{formatDate(apt.appointment_date)}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Clock size={18} />
-                        <span>
-                          {formatTime(apt.appointment_date)} (
-                          {apt.duration_minutes} min)
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <MapPin size={18} />
-                        <span className="capitalize">{apt.location_type}</span>
-                      </div>
+                {/* Appointment Details Grid */}
+                <div
+                  className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4 p-4 rounded-lg"
+                  style={{
+                    background: "var(--bg)",
+                    border: "1px solid var(--border-muted)",
+                  }}
+                >
+                  <div
+                    className="flex items-center gap-2 p-3 rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.3),0_1px_2px_rgba(0,0,0,0.03),0_2px_4px_rgba(0,0,0,0.015)]"
+                    style={{
+                      background: "var(--bg-light)",
+                      border: "1px solid var(--border-muted)",
+                    }}
+                  >
+                    <Calendar
+                      size={16}
+                      style={{ color: "var(--primary)", flexShrink: 0 }}
+                    />
+                    <div>
+                      <p
+                        className="text-xs"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Date
+                      </p>
+                      <p
+                        className="text-sm font-medium"
+                        style={{ color: "var(--text)" }}
+                      >
+                        {formatDate(apt.appointment_date)}
+                      </p>
                     </div>
-
-                    {apt.notes && (
-                      <div
-                        className="mt-3 p-3 rounded-lg"
-                        style={{
-                          background: "var(--bg)",
-                          border: "1px solid var(--border-muted)",
-                        }}
+                  </div>
+                  <div
+                    className="flex items-center gap-2 p-3 rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.3),0_1px_2px_rgba(0,0,0,0.03),0_2px_4px_rgba(0,0,0,0.015)]"
+                    style={{
+                      background: "var(--bg-light)",
+                      border: "1px solid var(--border-muted)",
+                    }}
+                  >
+                    <Clock
+                      size={16}
+                      style={{ color: "var(--primary)", flexShrink: 0 }}
+                    />
+                    <div>
+                      <p
+                        className="text-xs"
+                        style={{ color: "var(--text-muted)" }}
                       >
-                        <p
-                          className="text-sm font-medium mb-1"
-                          style={{ color: "var(--text)" }}
-                        >
-                          Student Notes:
-                        </p>
-                        <p
-                          className="text-sm"
-                          style={{ color: "var(--text-muted)" }}
-                        >
-                          {apt.notes}
-                        </p>
-                      </div>
-                    )}
-
-                    {apt.cancellation_reason && (
-                      <div
-                        className="mt-3 p-3 rounded-lg"
-                        style={{
-                          background: "var(--error-bg)",
-                          border: "1px solid var(--error)",
-                        }}
+                        Time
+                      </p>
+                      <p
+                        className="text-sm font-medium"
+                        style={{ color: "var(--text)" }}
                       >
-                        <p
-                          className="text-sm font-medium mb-1"
-                          style={{ color: "var(--error)" }}
-                        >
-                          Cancellation Reason:
-                        </p>
-                        <p
-                          className="text-sm"
-                          style={{ color: "var(--error)" }}
-                        >
-                          {apt.cancellation_reason}
-                        </p>
-                      </div>
-                    )}
+                        {formatTime(apt.appointment_date)} (
+                        {apt.duration_minutes} min)
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    className="flex items-center gap-2 p-3 rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.3),0_1px_2px_rgba(0,0,0,0.03),0_2px_4px_rgba(0,0,0,0.015)]"
+                    style={{
+                      background: "var(--bg-light)",
+                      border: "1px solid var(--border-muted)",
+                    }}
+                  >
+                    <MapPin
+                      size={16}
+                      style={{ color: "var(--primary)", flexShrink: 0 }}
+                    />
+                    <div>
+                      <p
+                        className="text-xs"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Location
+                      </p>
+                      <p
+                        className="text-sm font-medium capitalize"
+                        style={{ color: "var(--text)" }}
+                      >
+                        {apt.location_type.replace("_", " ")}
+                      </p>
+                    </div>
                   </div>
                 </div>
 
+                {/* Student Notes */}
+                {apt.notes && (
+                  <div
+                    className="mb-4 p-4 rounded-lg"
+                    style={{
+                      background: "var(--bg)",
+                      border: "1px solid var(--border-muted)",
+                    }}
+                  >
+                    <p
+                      className="text-xs font-semibold mb-2"
+                      style={{ color: "var(--text-muted)" }}
+                    >
+                      Student Notes
+                    </p>
+                    <p className="text-sm" style={{ color: "var(--text)" }}>
+                      {apt.notes}
+                    </p>
+                  </div>
+                )}
+
+                {/* Cancellation Reason */}
+                {apt.cancellation_reason && (
+                  <div
+                    className="mb-4 p-4 rounded-lg"
+                    style={{
+                      background: "var(--error-bg)",
+                      border: "1px solid var(--error)",
+                    }}
+                  >
+                    <p
+                      className="text-xs font-semibold mb-2"
+                      style={{ color: "var(--error)" }}
+                    >
+                      Cancellation Reason
+                    </p>
+                    <p className="text-sm" style={{ color: "var(--error)" }}>
+                      {apt.cancellation_reason}
+                    </p>
+                  </div>
+                )}
+
                 {/* Action Buttons */}
-                <div className="flex gap-3 mt-4">
+                <div
+                  className="flex flex-wrap gap-3 pt-4 border-t"
+                  style={{ borderColor: "var(--border-muted)" }}
+                >
                   <Link
                     href={`/dashboard/psg/appointments/${apt.id}`}
-                    className="px-4 py-2 rounded-lg hover:opacity-90 transition-all"
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg shadow-[0_1px_3px_rgba(0,0,0,0.2),0_1px_2px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_6px_rgba(0,0,0,0.25),0_2px_4px_rgba(0,0,0,0.08)] hover:opacity-90 transition-all text-sm font-medium"
                     style={{
                       background: "var(--info)",
                       color: "var(--bg-dark)",
@@ -392,13 +465,13 @@ export default function PSGAppointmentsPage() {
                     <button
                       onClick={() => handleConfirm(apt.id)}
                       disabled={confirming === apt.id}
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg hover:opacity-90 transition-all disabled:opacity-50"
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg shadow-[0_1px_3px_rgba(0,0,0,0.2),0_1px_2px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_6px_rgba(0,0,0,0.25),0_2px_4px_rgba(0,0,0,0.08)] hover:opacity-90 transition-all disabled:opacity-50 text-sm font-medium"
                       style={{
                         background: "var(--success)",
                         color: "var(--bg-dark)",
                       }}
                     >
-                      <CheckCircle size={18} />
+                      <CheckCircle size={16} />
                       {confirming === apt.id
                         ? "Confirming..."
                         : "Confirm Appointment"}

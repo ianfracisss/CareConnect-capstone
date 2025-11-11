@@ -122,7 +122,7 @@ export default function LoginPage() {
         >
           <div className="text-center mb-8">
             <h2
-              className="text-3xl font-bold mb-2"
+              className="text-base font-bold mb-2"
               style={{ color: "var(--text)" }}
             >
               Welcome Back
@@ -149,7 +149,7 @@ export default function LoginPage() {
                 type="email"
                 {...register("email")}
                 placeholder="your.name@carsu.edu.ph"
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:border-transparent outline-none transition shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)]"
                 style={{
                   background: "var(--bg)",
                   color: "var(--text)",
@@ -179,7 +179,7 @@ export default function LoginPage() {
                   type={showPassword ? "text" : "password"}
                   {...register("password")}
                   placeholder="Enter your password"
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:border-transparent outline-none transition pr-12"
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:border-transparent outline-none transition pr-12 shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)]"
                   style={{
                     background: "var(--bg)",
                     color: "var(--text)",
@@ -212,7 +212,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-2.5 px-4 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full py-2.5 px-4 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-[0_1px_3px_rgba(0,0,0,0.2),0_1px_2px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_6px_rgba(0,0,0,0.25),0_2px_4px_rgba(0,0,0,0.08)]"
               style={{ background: "var(--primary)", color: "var(--bg-dark)" }}
             >
               {isLoading ? (

@@ -134,7 +134,7 @@ export default function TakeScreeningPage() {
           {/* Header */}
           <div className="max-w-3xl mx-auto mb-8">
             <h1
-              className="text-3xl font-bold mb-2"
+              className="text-base font-bold mb-2"
               style={{ color: "var(--text)" }}
             >
               Mental Health Screening

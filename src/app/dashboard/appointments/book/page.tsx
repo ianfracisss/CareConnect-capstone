@@ -192,7 +192,7 @@ export default function BookAppointmentPage() {
       />
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         <h1
-          className="text-3xl font-bold mb-6"
+          className="text-base font-bold mb-6"
           style={{ color: "var(--text)" }}
         >
           Book an Appointment
@@ -200,14 +200,14 @@ export default function BookAppointmentPage() {
 
         {/* Date Range Selection */}
         <div
-          className="rounded-lg shadow-lg p-6 mb-6"
+          className="rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.3),0_1px_2px_rgba(0,0,0,0.03),0_2px_4px_rgba(0,0,0,0.015)] p-6 mb-6"
           style={{
             background: "var(--bg-light)",
             border: "1px solid var(--border-muted)",
           }}
         >
           <h2
-            className="text-2xl font-semibold mb-4"
+            className="text-base font-bold mb-4"
             style={{ color: "var(--text)" }}
           >
             Select Date Range
@@ -273,14 +273,14 @@ export default function BookAppointmentPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Slots List */}
           <div
-            className="rounded-lg shadow-lg p-6"
+            className="rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.3),0_1px_2px_rgba(0,0,0,0.03),0_2px_4px_rgba(0,0,0,0.015)] p-6"
             style={{
               background: "var(--bg-light)",
               border: "1px solid var(--border-muted)",
             }}
           >
             <h2
-              className="text-xl font-semibold mb-4"
+              className="text-base font-bold mb-4"
               style={{ color: "var(--text)" }}
             >
               Available Time Slots
@@ -361,14 +361,14 @@ export default function BookAppointmentPage() {
 
           {/* Booking Summary */}
           <div
-            className="rounded-lg shadow-lg p-6 h-fit sticky top-4"
+            className="rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.3),0_1px_2px_rgba(0,0,0,0.03),0_2px_4px_rgba(0,0,0,0.015)] p-6 h-fit sticky top-4"
             style={{
               background: "var(--bg-light)",
               border: "1px solid var(--border-muted)",
             }}
           >
             <h2
-              className="text-xl font-semibold mb-4"
+              className="text-base font-bold mb-4"
               style={{ color: "var(--text)" }}
             >
               Booking Summary
@@ -435,7 +435,7 @@ export default function BookAppointmentPage() {
                     <button
                       type="button"
                       onClick={() => setLocationType("online")}
-                      className="px-4 py-2 rounded-lg transition-all text-sm font-medium"
+                      className="px-4 py-2 rounded-lg transition-all text-sm font-medium shadow-[0_1px_2px_rgba(0,0,0,0.1)] hover:shadow-[0_2px_4px_rgba(0,0,0,0.15)]"
                       style={{
                         border:
                           locationType === "online"
@@ -456,7 +456,7 @@ export default function BookAppointmentPage() {
                     <button
                       type="button"
                       onClick={() => setLocationType("in_person")}
-                      className="px-4 py-2 rounded-lg transition-all text-sm font-medium"
+                      className="px-4 py-2 rounded-lg transition-all text-sm font-medium shadow-[0_1px_2px_rgba(0,0,0,0.1)] hover:shadow-[0_2px_4px_rgba(0,0,0,0.15)]"
                       style={{
                         border:
                           locationType === "in_person"

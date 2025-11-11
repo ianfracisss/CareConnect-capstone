@@ -213,7 +213,7 @@ export default function PSGAppointmentDetailPage({ params }: PageProps) {
 
         {/* Main Card */}
         <div
-          className="rounded-lg shadow-lg p-8"
+          className="rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.3),0_1px_2px_rgba(0,0,0,0.03),0_2px_4px_rgba(0,0,0,0.015)] p-8"
           style={{
             background: "var(--bg-light)",
             border: "1px solid var(--border-muted)",
@@ -221,7 +221,7 @@ export default function PSGAppointmentDetailPage({ params }: PageProps) {
         >
           {/* Header */}
           <div className="flex justify-between items-start mb-6">
-            <h1 className="text-3xl font-bold" style={{ color: "var(--text)" }}>
+            <h1 className="text-lg font-bold" style={{ color: "var(--text)" }}>
               Appointment Details
             </h1>
             <span
@@ -238,7 +238,7 @@ export default function PSGAppointmentDetailPage({ params }: PageProps) {
           {/* Student Information */}
           <div className="mb-8">
             <h2
-              className="text-xl font-semibold mb-4 flex items-center gap-2"
+              className="text-base font-bold mb-4 flex items-center gap-2"
               style={{ color: "var(--text)" }}
             >
               <User size={20} />
@@ -278,7 +278,7 @@ export default function PSGAppointmentDetailPage({ params }: PageProps) {
           {/* Appointment Information */}
           <div className="mb-8">
             <h2
-              className="text-xl font-semibold mb-4"
+              className="text-base font-bold mb-4"
               style={{ color: "var(--text)" }}
             >
               Appointment Information
@@ -405,7 +405,7 @@ export default function PSGAppointmentDetailPage({ params }: PageProps) {
           {appointment.notes && (
             <div className="mb-8">
               <h2
-                className="text-xl font-semibold mb-4"
+                className="text-base font-bold mb-4"
                 style={{ color: "var(--text)" }}
               >
                 Student Notes
@@ -426,7 +426,7 @@ export default function PSGAppointmentDetailPage({ params }: PageProps) {
           {appointment.cancellation_reason && (
             <div className="mb-8">
               <h2
-                className="text-xl font-semibold mb-4"
+                className="text-base font-bold mb-4"
                 style={{ color: "var(--text)" }}
               >
                 Cancellation Details
@@ -498,7 +498,7 @@ export default function PSGAppointmentDetailPage({ params }: PageProps) {
               }}
             >
               <h3
-                className="text-xl font-semibold mb-4"
+                className="text-base font-bold mb-4"
                 style={{ color: "var(--text)" }}
               >
                 Cancel Appointment
@@ -536,7 +536,7 @@ export default function PSGAppointmentDetailPage({ params }: PageProps) {
                     setCancelReason("");
                   }}
                   disabled={processing}
-                  className="px-6 py-2 rounded-lg hover:opacity-90 transition-all"
+                  className="px-6 py-2 rounded-lg shadow-[0_1px_3px_rgba(0,0,0,0.2),0_1px_2px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_6px_rgba(0,0,0,0.25),0_2px_4px_rgba(0,0,0,0.08)] hover:opacity-90 transition-all"
                   style={{
                     background: "var(--bg-secondary)",
                     color: "var(--text)",
