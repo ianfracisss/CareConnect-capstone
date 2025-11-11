@@ -118,10 +118,7 @@ export default function PSGAppointmentsPage() {
       if (filter === "pending") {
         return apt.status === "scheduled";
       } else if (filter === "upcoming") {
-        return (
-          aptDate >= now &&
-          (apt.status === "confirmed" || apt.status === "scheduled")
-        );
+        return aptDate >= now && apt.status === "confirmed";
       } else if (filter === "past") {
         return (
           aptDate < now ||
