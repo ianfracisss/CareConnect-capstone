@@ -7,11 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { createReferral } from "@/actions/referrals";
+import { useAlert } from "@/components/AlertProvider";
 import { ArrowLeft, Send } from "lucide-react";
 import Link from "next/link";
 
 export default function CreateReferralPage() {
   const router = useRouter();
+  const { showAlert } = useAlert();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -34,9 +36,12 @@ export default function CreateReferralPage() {
 
       if (result.success) {
         // Show success message and redirect
-        alert(
-          "Referral submitted successfully! A PSG member will review your request soon."
-        );
+        showAlert({
+          type: "success",
+          message:
+            "Referral submitted successfully! A PSG member will review your request soon.",
+          duration: 5000,
+        });
         router.push("/dashboard");
       } else {
         setError(result.error || "Failed to submit referral");
