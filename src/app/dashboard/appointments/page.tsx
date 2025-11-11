@@ -216,7 +216,7 @@ export default function StudentAppointmentsPage() {
                               : apt.status === "completed"
                               ? "var(--success)"
                               : "var(--error)",
-                          color: "#000000",
+                          color: "var(--bg-dark)",
                         }}
                       >
                         {
