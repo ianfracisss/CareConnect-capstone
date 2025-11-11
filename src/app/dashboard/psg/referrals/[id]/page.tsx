@@ -10,6 +10,7 @@ import {
   getReferralUpdates,
   getReferralAssessment,
   updateReferralStatus,
+  getPSGMembers,
 } from "@/actions/referrals";
 import {
   ReferralWithProfiles,
@@ -20,7 +21,7 @@ import {
   SEVERITY_COLORS,
   REFERRAL_SOURCE_LABELS,
 } from "@/types/referrals";
-import { ArrowLeft, User } from "lucide-react";
+import { ArrowLeft, User, X } from "lucide-react";
 import Link from "next/link";
 
 export default function ReferralDetailPage() {
@@ -31,6 +32,11 @@ export default function ReferralDetailPage() {
   const [referral, setReferral] = useState<ReferralWithProfiles | null>(null);
   const [updates, setUpdates] = useState<ReferralUpdateWithProfile[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showAssignModal, setShowAssignModal] = useState(false);
+  const [psgMembers, setPsgMembers] = useState<
+    Array<{ id: string; full_name: string; email: string }>
+  >([]);
+  const [selectedPsgMember, setSelectedPsgMember] = useState<string>("");
 
   const loadReferralData = async () => {
     setIsLoading(true);
@@ -77,6 +83,62 @@ export default function ReferralDetailPage() {
     loadReferralData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [referralId]);
+
+  const loadPSGMembers = async () => {
+    const result = await getPSGMembers();
+    if (result.success && result.data) {
+      setPsgMembers(result.data);
+    }
+  };
+
+  const handleAssignClick = () => {
+    loadPSGMembers();
+    setShowAssignModal(true);
+  };
+
+  const handleAssignSubmit = async () => {
+    if (!selectedPsgMember) {
+      showAlert({
+        type: "error",
+        message: "Please select a PSG member",
+        duration: 3000,
+      });
+      return;
+    }
+
+    try {
+      const result = await updateReferralStatus(
+        referralId,
+        "assigned",
+        undefined,
+        selectedPsgMember
+      );
+
+      if (result.success) {
+        showAlert({
+          type: "success",
+          message: "Referral assigned successfully",
+          duration: 4000,
+        });
+        setShowAssignModal(false);
+        setSelectedPsgMember("");
+        loadReferralData();
+      } else {
+        showAlert({
+          type: "error",
+          message: result.error || "Failed to assign referral",
+          duration: 5000,
+        });
+      }
+    } catch (err) {
+      console.error("Error assigning referral:", err);
+      showAlert({
+        type: "error",
+        message: "An unexpected error occurred",
+        duration: 5000,
+      });
+    }
+  };
 
   const handleStatusChange = async (newStatus: ReferralStatus) => {
     if (!referral) return;
@@ -420,7 +482,7 @@ export default function ReferralDetailPage() {
                 )}
                 {referral.status === "reviewed" && (
                   <Button
-                    onClick={() => handleStatusChange("assigned")}
+                    onClick={handleAssignClick}
                     className="w-full"
                     style={{
                       background: "var(--primary)",
@@ -447,6 +509,115 @@ export default function ReferralDetailPage() {
           </div>
         </div>
       </main>
+
+      {/* Assignment Modal */}
+      {showAssignModal && (
+        <div
+          className="fixed inset-0 backdrop-blur-sm bg-opacity-50 flex items-center justify-center z-50 p-4"
+          onClick={() => setShowAssignModal(false)}
+        >
+          <div
+            className="rounded-lg p-6 max-w-md w-full"
+            style={{
+              background: "var(--bg-light)",
+              border: "1px solid var(--border-muted)",
+              boxShadow:
+                "0 4px 8px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.08), 0 8px 16px rgba(0,0,0,0.04)",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center mb-4">
+              <h3
+                className="text-base font-bold"
+                style={{ color: "var(--text)" }}
+              >
+                Assign to PSG Member
+              </h3>
+              <button
+                onClick={() => setShowAssignModal(false)}
+                className="p-1 rounded hover:opacity-70 transition"
+                style={{ color: "var(--text-muted)" }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <p className="text-sm mb-4" style={{ color: "var(--text-muted)" }}>
+              Select a PSG member to assign this referral to:
+            </p>
+
+            <div className="space-y-2 mb-6 max-h-80 overflow-y-auto">
+              {psgMembers.map((member) => (
+                <label
+                  key={member.id}
+                  className="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:opacity-90 transition"
+                  style={{
+                    background:
+                      selectedPsgMember === member.id
+                        ? "var(--primary-20)"
+                        : "var(--bg-dark)",
+                    border:
+                      selectedPsgMember === member.id
+                        ? "2px solid var(--primary)"
+                        : "1px solid var(--border-muted)",
+                  }}
+                >
+                  <input
+                    type="radio"
+                    name="psg_member"
+                    value={member.id}
+                    checked={selectedPsgMember === member.id}
+                    onChange={(e) => setSelectedPsgMember(e.target.value)}
+                    className="w-4 h-4"
+                    style={{ accentColor: "var(--primary)" }}
+                  />
+                  <div className="flex-1">
+                    <p
+                      className="text-sm font-medium"
+                      style={{ color: "var(--text)" }}
+                    >
+                      {member.full_name}
+                    </p>
+                    <p
+                      className="text-xs"
+                      style={{ color: "var(--text-muted)" }}
+                    >
+                      {member.email}
+                    </p>
+                  </div>
+                </label>
+              ))}
+            </div>
+
+            <div className="flex gap-3">
+              <Button
+                onClick={() => {
+                  setShowAssignModal(false);
+                  setSelectedPsgMember("");
+                }}
+                className="flex-1"
+                style={{
+                  background: "var(--bg-dark)",
+                  color: "var(--text)",
+                  border: "1px solid var(--border-muted)",
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleAssignSubmit}
+                className="flex-1"
+                style={{
+                  background: "var(--primary)",
+                  color: "white",
+                }}
+              >
+                Assign
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -405,3 +405,28 @@ export async function escalateReferral(
     return { success: false, error: "Failed to escalate referral" };
   }
 }
+
+// Get all PSG members
+export async function getPSGMembers(): Promise<
+  ActionResponse<Array<{ id: string; full_name: string; email: string }>>
+> {
+  try {
+    const supabase = await createClient();
+
+    const { data: psgMembers, error } = await supabase
+      .from("profiles")
+      .select("id, full_name, email")
+      .eq("role", "psg_member")
+      .order("full_name");
+
+    if (error) {
+      console.error("Error fetching PSG members:", error);
+      return { success: false, error: "Failed to load PSG members" };
+    }
+
+    return { success: true, data: psgMembers };
+  } catch (error) {
+    console.error("Unexpected error fetching PSG members:", error);
+    return { success: false, error: "Failed to load PSG members" };
+  }
+}
