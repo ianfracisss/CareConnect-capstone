@@ -284,7 +284,7 @@ export default function PSGReferralsPage() {
                           className="px-2 py-1 rounded text-xs font-semibold"
                           style={{
                             background: SEVERITY_COLORS[referral.severity],
-                            color: "var(--bg-dark)",
+                            color: "#ffffff",
                           }}
                         >
                           {referral.severity.toUpperCase()}
@@ -294,10 +294,7 @@ export default function PSGReferralsPage() {
                         className="px-3 py-1 rounded-full text-xs font-medium shadow-[0_1px_2px_rgba(0,0,0,0.15)]"
                         style={{
                           background: getStatusColor(referral.status),
-                          color:
-                            referral.status === "pending"
-                              ? "#000000"
-                              : "var(--bg-dark)",
+                          color: "#ffffff",
                         }}
                       >
                         {REFERRAL_STATUS_LABELS[referral.status]}

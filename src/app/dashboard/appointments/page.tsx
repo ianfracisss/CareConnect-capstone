@@ -68,25 +68,33 @@ export default function StudentAppointmentsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const filteredAppointments = appointments.filter((apt) => {
-    const aptDate = new Date(apt.appointment_date);
-    const now = new Date();
+  const filteredAppointments = appointments
+    .filter((apt) => {
+      const aptDate = new Date(apt.appointment_date);
+      const now = new Date();
 
-    if (filter === "upcoming") {
+      if (filter === "upcoming") {
+        return (
+          aptDate >= now &&
+          apt.status !== "completed" &&
+          apt.status !== "cancelled"
+        );
+      } else if (filter === "past") {
+        return (
+          aptDate < now ||
+          apt.status === "completed" ||
+          apt.status === "cancelled"
+        );
+      }
+      return true;
+    })
+    .sort((a, b) => {
+      // Sort by appointment date descending (most recent first)
       return (
-        aptDate >= now &&
-        apt.status !== "completed" &&
-        apt.status !== "cancelled"
+        new Date(b.appointment_date).getTime() -
+        new Date(a.appointment_date).getTime()
       );
-    } else if (filter === "past") {
-      return (
-        aptDate < now ||
-        apt.status === "completed" ||
-        apt.status === "cancelled"
-      );
-    }
-    return true;
-  });
+    });
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -208,7 +216,7 @@ export default function StudentAppointmentsPage() {
                               : apt.status === "completed"
                               ? "var(--success)"
                               : "var(--error)",
-                          color: "var(--bg-dark)",
+                          color: "#ffffff",
                         }}
                       >
                         {

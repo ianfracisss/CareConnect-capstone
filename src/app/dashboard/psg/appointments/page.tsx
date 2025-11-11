@@ -110,26 +110,34 @@ export default function PSGAppointmentsPage() {
     }
   };
 
-  const filteredAppointments = appointments.filter((apt) => {
-    const aptDate = new Date(apt.appointment_date);
-    const now = new Date();
+  const filteredAppointments = appointments
+    .filter((apt) => {
+      const aptDate = new Date(apt.appointment_date);
+      const now = new Date();
 
-    if (filter === "pending") {
-      return apt.status === "scheduled";
-    } else if (filter === "upcoming") {
+      if (filter === "pending") {
+        return apt.status === "scheduled";
+      } else if (filter === "upcoming") {
+        return (
+          aptDate >= now &&
+          (apt.status === "confirmed" || apt.status === "scheduled")
+        );
+      } else if (filter === "past") {
+        return (
+          aptDate < now ||
+          apt.status === "completed" ||
+          apt.status === "cancelled"
+        );
+      }
+      return true; // all
+    })
+    .sort((a, b) => {
+      // Sort by appointment date descending (most recent first)
       return (
-        aptDate >= now &&
-        (apt.status === "confirmed" || apt.status === "scheduled")
+        new Date(b.appointment_date).getTime() -
+        new Date(a.appointment_date).getTime()
       );
-    } else if (filter === "past") {
-      return (
-        aptDate < now ||
-        apt.status === "completed" ||
-        apt.status === "cancelled"
-      );
-    }
-    return true; // all
-  });
+    });
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -233,7 +241,7 @@ export default function PSGAppointmentsPage() {
                   className="ml-2 px-2 py-0.5 text-xs rounded-full"
                   style={{
                     background: "var(--error)",
-                    color: "var(--bg-dark)",
+                    color: "#ffffff",
                   }}
                 >
                   {tab.count}
@@ -308,7 +316,7 @@ export default function PSGAppointmentsPage() {
                     className="px-3 py-1 rounded-full text-xs font-medium shadow-[0_1px_2px_rgba(0,0,0,0.15)]"
                     style={{
                       background: getStatusColor(apt.status),
-                      color: "var(--bg-dark)",
+                      color: "#ffffff",
                     }}
                   >
                     {APPOINTMENT_STATUS_LABELS[apt.status]}
