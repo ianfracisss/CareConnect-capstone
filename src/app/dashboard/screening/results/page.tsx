@@ -275,7 +275,7 @@ export default function ScreeningResultsPage() {
                       router.push("/dashboard/appointments");
                     }}
                     disabled={!hasCaseAssessment}
-                    className="w-full sm:w-auto cursor-pointer inline-flex items-center justify-center gap-2 px-6 py-2 rounded-md font-medium text-sm transition border hover:bg-primary hover:border-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full sm:w-auto cursor-pointer inline-flex items-center justify-center gap-2 px-6 py-2 rounded-md font-medium text-sm transition border disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_1px_2px_rgba(0,0,0,0.3),0_1px_2px_rgba(0,0,0,0.03),0_2px_4px_rgba(0,0,0,0.015)] hover:shadow-[0_2px_4px_rgba(0,0,0,0.4),0_2px_4px_rgba(0,0,0,0.06),0_4px_8px_rgba(0,0,0,0.03)]"
                     style={{
                       borderColor: "var(--border)",
                       background: "var(--bg)",
@@ -283,9 +283,13 @@ export default function ScreeningResultsPage() {
                     }}
                     onMouseEnter={(e) => {
                       if (!hasCaseAssessment) return;
+                      e.currentTarget.style.background = "var(--primary)";
+                      e.currentTarget.style.borderColor = "var(--primary)";
                       e.currentTarget.style.color = "var(--bg-dark)";
                     }}
                     onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "var(--bg)";
+                      e.currentTarget.style.borderColor = "var(--border)";
                       e.currentTarget.style.color = "var(--text)";
                     }}
                     title={
@@ -299,14 +303,16 @@ export default function ScreeningResultsPage() {
                   </button>
                   <button
                     onClick={handleTakeAnother}
-                    className="w-full sm:w-auto cursor-pointer inline-flex items-center justify-center gap-2 px-6 py-2 rounded-md font-medium text-sm transition hover:bg-primary"
+                    className="w-full sm:w-auto cursor-pointer inline-flex items-center justify-center gap-2 px-6 py-2 rounded-md font-medium text-sm transition shadow-[0_1px_2px_rgba(0,0,0,0.3),0_1px_2px_rgba(0,0,0,0.03),0_2px_4px_rgba(0,0,0,0.015)] hover:shadow-[0_2px_4px_rgba(0,0,0,0.4),0_2px_4px_rgba(0,0,0,0.06),0_4px_8px_rgba(0,0,0,0.03)]"
                     style={{
                       color: "var(--text)",
                     }}
                     onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "var(--primary)";
                       e.currentTarget.style.color = "var(--bg-dark)";
                     }}
                     onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "transparent";
                       e.currentTarget.style.color = "var(--text)";
                     }}
                   >

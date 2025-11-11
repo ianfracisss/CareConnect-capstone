@@ -152,16 +152,10 @@ export default function ScreeningDetailPage({
               </h2>
               <button
                 onClick={() => router.push("/dashboard/psg/screenings")}
-                className="mt-4 px-6 py-2 rounded-md font-medium text-sm transition hover:bg-primary"
+                className="mt-4 px-6 py-2 rounded-md font-medium text-sm transition shadow-[0_1px_3px_rgba(0,0,0,0.2),0_1px_2px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_6px_rgba(0,0,0,0.25),0_2px_4px_rgba(0,0,0,0.08)] hover:opacity-90"
                 style={{
                   background: "var(--primary)",
                   color: "var(--bg-dark)",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "var(--success)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "var(--primary)";
                 }}
               >
                 Back to List
@@ -374,14 +368,16 @@ export default function ScreeningDetailPage({
 
                 <button
                   onClick={() => router.push("/dashboard/psg/screenings")}
-                  className="px-8 py-2.5 rounded-md font-medium text-sm transition hover:bg-primary w-full sm:w-auto"
+                  className="px-8 py-2.5 rounded-md font-medium text-sm transition w-full sm:w-auto shadow-[0_1px_2px_rgba(0,0,0,0.3),0_1px_2px_rgba(0,0,0,0.03),0_2px_4px_rgba(0,0,0,0.015)] hover:shadow-[0_2px_4px_rgba(0,0,0,0.4),0_2px_4px_rgba(0,0,0,0.06),0_4px_8px_rgba(0,0,0,0.03)]"
                   style={{
                     color: "var(--text)",
                   }}
                   onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "var(--primary)";
                     e.currentTarget.style.color = "var(--bg-dark)";
                   }}
                   onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "transparent";
                     e.currentTarget.style.color = "var(--text)";
                   }}
                 >

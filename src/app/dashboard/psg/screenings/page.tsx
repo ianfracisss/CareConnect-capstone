@@ -429,15 +429,22 @@ export default function PSGScreeningsPage() {
                                 `/dashboard/psg/screenings/${screening.id}`
                               )
                             }
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition border hover:bg-primary hover:border-primary"
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition border shadow-[0_1px_2px_rgba(0,0,0,0.3),0_1px_2px_rgba(0,0,0,0.03),0_2px_4px_rgba(0,0,0,0.015)] hover:shadow-[0_2px_4px_rgba(0,0,0,0.4),0_2px_4px_rgba(0,0,0,0.06),0_4px_8px_rgba(0,0,0,0.03)]"
                             style={{
                               borderColor: "var(--border)",
                               color: "var(--text)",
                             }}
                             onMouseEnter={(e) => {
+                              e.currentTarget.style.background =
+                                "var(--primary)";
+                              e.currentTarget.style.borderColor =
+                                "var(--primary)";
                               e.currentTarget.style.color = "var(--bg-dark)";
                             }}
                             onMouseLeave={(e) => {
+                              e.currentTarget.style.background = "transparent";
+                              e.currentTarget.style.borderColor =
+                                "var(--border)";
                               e.currentTarget.style.color = "var(--text)";
                             }}
                           >
