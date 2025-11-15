@@ -1,5 +1,6 @@
 "use client";
 import { DashboardLoginAlert } from "@/components/DashboardLoginAlert";
+import { ChatWidget } from "@/components/ChatWidget";
 
 export function DashboardClientWrapper({
   children,
@@ -10,6 +11,7 @@ export function DashboardClientWrapper({
     <>
       <DashboardLoginAlert />
       {children}
+      <ChatWidget />
     </>
   );
 }
