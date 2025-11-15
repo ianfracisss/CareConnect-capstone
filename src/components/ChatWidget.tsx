@@ -350,7 +350,9 @@ export function ChatWidget() {
                             className="text-xs mb-1"
                             style={{ color: "var(--text-muted)" }}
                           >
-                            {message.sender?.full_name || "Unknown"}
+                            {isOwn
+                              ? message.sender?.full_name || "You"
+                              : "PSG Member"}
                           </p>
                           <div
                             className={`inline-block p-3 rounded-lg max-w-[80%] shadow-[0_1px_2px_rgba(0,0,0,0.1)] ${
