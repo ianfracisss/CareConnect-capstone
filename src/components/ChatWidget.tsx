@@ -51,6 +51,11 @@ export function ChatWidget() {
   useEffect(() => {
     if (!conversationId) return;
 
+    console.log(
+      "Setting up real-time subscription for conversation:",
+      conversationId
+    );
+
     const supabase = createClient();
     const channel = supabase
       .channel(`conversation:${conversationId}`)
@@ -63,6 +68,7 @@ export function ChatWidget() {
           filter: `conversation_id=eq.${conversationId}`,
         },
         async (payload) => {
+          console.log("Real-time message received:", payload);
           // Fetch the complete message with sender info
           const { data: newMessage } = await supabase
             .from("messages")
@@ -76,6 +82,7 @@ export function ChatWidget() {
             .single();
 
           if (newMessage) {
+            console.log("Adding message to state:", newMessage);
             setMessages((prev) => [...prev, newMessage]);
 
             // Mark as read if chat is open and message is from someone else
@@ -92,9 +99,12 @@ export function ChatWidget() {
           }
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log("Subscription status:", status);
+      });
 
     return () => {
+      console.log("Cleaning up subscription");
       supabase.removeChannel(channel);
     };
   }, [conversationId, isOpen, isMinimized, currentUserId]);
@@ -151,17 +161,21 @@ export function ChatWidget() {
     if (!newMessage.trim() || !conversationId || sending) return;
 
     setSending(true);
+    const messageContent = newMessage.trim();
+    setNewMessage(""); // Clear input immediately for better UX
+
     try {
-      const result = await sendMessage(conversationId, newMessage);
-      if (result.success) {
-        setNewMessage("");
-      } else {
+      const result = await sendMessage(conversationId, messageContent);
+      if (!result.success) {
+        // If failed, restore the message
+        setNewMessage(messageContent);
         showAlert({
           type: "error",
           message: result.error || "Failed to send message",
           duration: 3000,
         });
       }
+      // Don't need to manually add to messages array - real-time subscription will handle it
     } finally {
       setSending(false);
     }

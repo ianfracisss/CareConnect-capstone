@@ -166,12 +166,19 @@ export async function sendMessage(
     } = await supabase.auth.getUser();
 
     if (authError || !user) {
+      console.error("Auth error:", authError);
       return { success: false, error: "Authentication required" };
     }
 
     if (!content.trim()) {
       return { success: false, error: "Message cannot be empty" };
     }
+
+    console.log("Sending message:", {
+      conversationId,
+      userId: user.id,
+      content,
+    });
 
     const { data: message, error } = await supabase
       .from("messages")
@@ -184,8 +191,17 @@ export async function sendMessage(
       .single();
 
     if (error) {
-      console.error("Error sending message:", error);
-      return { success: false, error: "Failed to send message" };
+      console.error(
+        "Error sending message - Full error:",
+        JSON.stringify(error, null, 2)
+      );
+      console.error("Error code:", error.code);
+      console.error("Error message:", error.message);
+      console.error("Error details:", error.details);
+      return {
+        success: false,
+        error: `Failed to send message: ${error.message}`,
+      };
     }
 
     return { success: true, data: message };
