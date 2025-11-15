@@ -5,9 +5,7 @@ CREATE TABLE IF NOT EXISTS conversations (
   psg_member_id UUID REFERENCES profiles(id) ON DELETE SET NULL,
   last_message_at TIMESTAMPTZ DEFAULT NOW(),
   created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW(),
-  CONSTRAINT conversations_student_id_fkey FOREIGN KEY (student_id) REFERENCES profiles(id),
-  CONSTRAINT conversations_psg_member_id_fkey FOREIGN KEY (psg_member_id) REFERENCES profiles(id)
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- Create messages table
@@ -17,9 +15,7 @@ CREATE TABLE IF NOT EXISTS messages (
   sender_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   content TEXT NOT NULL,
   read_at TIMESTAMPTZ,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  CONSTRAINT messages_conversation_id_fkey FOREIGN KEY (conversation_id) REFERENCES conversations(id),
-  CONSTRAINT messages_sender_id_fkey FOREIGN KEY (sender_id) REFERENCES profiles(id)
+  created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- Create indexes for better performance
