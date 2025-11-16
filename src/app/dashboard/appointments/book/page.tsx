@@ -35,8 +35,18 @@ export default function BookAppointmentPage() {
   const [endDate, setEndDate] = useState(nextWeek);
 
   const searchSlots = async () => {
-    if (!startDate || !endDate) return;
+    console.log("🔍 searchSlots called");
+    console.log("📅 Start Date:", startDate);
+    console.log("📅 End Date:", endDate);
+    console.log("👤 User ID:", userId);
+
+    if (!startDate || !endDate) {
+      console.log("❌ No dates provided");
+      return;
+    }
+
     if (new Date(startDate) > new Date(endDate)) {
+      console.log("❌ Start date is after end date");
       showAlert({
         message: "Start date must be before end date",
         type: "error",
@@ -46,38 +56,59 @@ export default function BookAppointmentPage() {
     }
 
     try {
+      console.log("⏳ Starting slot search...");
       setLoading(true);
-      const result = await getAvailableTimeSlots(startDate, endDate, 60);
 
-      if (result.success && result.data) {
-        setSlots(result.data);
-        if (result.data.length === 0) {
+      const result = await getAvailableTimeSlots(startDate, endDate, 60);
+      console.log("📦 Result from getAvailableTimeSlots:", result);
+
+      if (result.success) {
+        console.log("✅ Search successful");
+        console.log("📊 Slots data:", result.data);
+        console.log("📈 Number of slots:", result.data?.length || 0);
+
+        setSlots(result.data || []);
+
+        if (!result.data || result.data.length === 0) {
+          console.log("⚠️ No slots found in range");
           showAlert({
-            message: "No available slots found in this date range",
-            type: "warning",
+            message:
+              "No available slots found in this date range. PSG members may not have set their availability yet.",
+            type: "info",
             duration: 5000,
           });
+        } else {
+          console.log("✨ Slots loaded successfully");
         }
       } else {
+        console.log("❌ Search failed with error:", result.error);
         showAlert({
           message: result.error || "Failed to load available slots",
           type: "error",
           duration: 5000,
         });
       }
-    } catch {
+    } catch (error) {
+      console.error("💥 EXCEPTION in searchSlots:", error);
+      console.error("Error details:", {
+        name: (error as Error)?.name,
+        message: (error as Error)?.message,
+        stack: (error as Error)?.stack,
+      });
       showAlert({
-        message: "An unexpected error occurred",
+        message: "An unexpected error occurred while searching for slots",
         type: "error",
         duration: 5000,
       });
     } finally {
+      console.log("🏁 Search complete, setting loading to false");
       setLoading(false);
     }
   };
 
   useEffect(() => {
     async function checkAuth() {
+      console.log("🔐 Checking authentication...");
       const supabase = createClient();
       const {
         data: { user },
@@ -85,6 +116,7 @@ export default function BookAppointmentPage() {
       } = await supabase.auth.getUser();
 
       if (authError || !user) {
+        console.log("❌ Authentication failed:", authError);
         showAlert({
           message: "Please login first",
           type: "error",
@@ -93,20 +125,42 @@ export default function BookAppointmentPage() {
         router.push("/login");
         return;
       }
+      console.log("✅ User authenticated:", user.id);
       setUserId(user.id);
     }
     checkAuth();
   }, [showAlert, router]);
 
   useEffect(() => {
-    if (startDate && endDate) {
+    console.log(
+      "🔄 useEffect triggered - userId:",
+      userId,
+      "startDate:",
+      startDate,
+      "endDate:",
+      endDate
+    );
+    // Only search slots if user is authenticated
+    if (userId && startDate && endDate) {
+      console.log("▶️ Conditions met, calling searchSlots");
       searchSlots();
+    } else {
+      console.log("⏸️ Conditions not met, skipping search");
+      console.log("  - userId present:", !!userId);
+      console.log("  - startDate present:", !!startDate);
+      console.log("  - endDate present:", !!endDate);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [startDate, endDate]);
+  }, [userId, startDate, endDate]);
 
   const handleBookAppointment = async () => {
+    console.log("📝 handleBookAppointment called");
+    console.log("🎯 Selected slot:", selectedSlot);
+    console.log("📍 Location type:", locationType);
+    console.log("🔗 Meeting link:", meetingLink);
+
     if (!selectedSlot) {
+      console.log("❌ No slot selected");
       showAlert({
         message: "Please select a time slot",
         type: "error",
@@ -117,6 +171,7 @@ export default function BookAppointmentPage() {
 
     // Validate meeting link for online appointments
     if (locationType === "online" && !meetingLink.trim()) {
+      console.log("❌ Missing meeting link for online appointment");
       showAlert({
         message: "Please provide a meeting link for online appointments",
         type: "error",
@@ -126,11 +181,10 @@ export default function BookAppointmentPage() {
     }
 
     try {
+      console.log("⏳ Starting appointment booking...");
       setLoading(true);
 
-      // Use the appointment_timestamp from the slot for accurate booking
-      // This preserves the exact time in the database timezone (Philippines)
-      const result = await createAppointment({
+      const appointmentData = {
         student_id: userId,
         psg_member_id: selectedSlot.psg_member_id,
         appointment_date: selectedSlot.appointment_timestamp,
@@ -138,9 +192,18 @@ export default function BookAppointmentPage() {
         location_type: locationType,
         meeting_link: locationType === "online" ? meetingLink : undefined,
         notes: notes || undefined,
-      });
+      };
+
+      console.log("📤 Sending appointment data:", appointmentData);
+
+      // Use the appointment_timestamp from the slot for accurate booking
+      // This preserves the exact time in the database timezone (Philippines)
+      const result = await createAppointment(appointmentData);
+
+      console.log("📥 Result from createAppointment:", result);
 
       if (result.success) {
+        console.log("✅ Appointment booked successfully");
         showAlert({
           message: "Appointment booked successfully!",
           type: "success",
@@ -148,19 +211,27 @@ export default function BookAppointmentPage() {
         });
         router.push("/dashboard/appointments");
       } else {
+        console.log("❌ Booking failed:", result.error);
         showAlert({
           message: result.error || "Failed to book appointment",
           type: "error",
           duration: 5000,
         });
       }
-    } catch {
+    } catch (error) {
+      console.error("💥 EXCEPTION in handleBookAppointment:", error);
+      console.error("Error details:", {
+        name: (error as Error)?.name,
+        message: (error as Error)?.message,
+        stack: (error as Error)?.stack,
+      });
       showAlert({
         message: "An unexpected error occurred",
         type: "error",
         duration: 5000,
       });
     } finally {
+      console.log("🏁 Booking complete, setting loading to false");
       setLoading(false);
     }
   };

@@ -178,67 +178,80 @@ export async function getAvailableTimeSlots(
   try {
     const supabase = await createClient();
 
-    // Get all active PSG members with their availability
-    const { data: availabilities, error: availError } = await supabase
+    // Get all active PSG availability records
+    const { data: rawAvailabilities, error: availError } = await supabase
       .from("psg_availability")
-      .select(
-        `
-        *,
-        psg_member:profiles!psg_member_id(id, full_name, avatar_url)
-      `
-      )
+      .select("*")
       .eq("is_active", true);
 
     if (availError) {
-      console.error("Get availabilities error:", availError);
+      console.error("Database error fetching availabilities:", availError);
       return { success: false, error: "Failed to fetch availabilities" };
     }
 
-    if (!availabilities || availabilities.length === 0) {
-      console.log("No active availabilities found");
+    if (!rawAvailabilities || rawAvailabilities.length === 0) {
       return { success: true, data: [] };
     }
 
-    console.log("Found availabilities:", availabilities.length);
+    // Get unique PSG member IDs
+    const psgMemberIds = [
+      ...new Set(rawAvailabilities.map((a) => a.psg_member_id)),
+    ];
+
+    // Fetch profiles for all PSG members
+    const { data: profiles, error: profileError } = await supabase
+      .from("profiles")
+      .select("id, full_name, avatar_url")
+      .in("id", psgMemberIds);
+
+    if (profileError) {
+      console.error("Error fetching profiles:", profileError);
+      return { success: false, error: "Failed to fetch PSG member profiles" };
+    }
+
+    if (!profiles || profiles.length === 0) {
+      return { success: true, data: [] };
+    }
+
+    // Create a map of profiles for quick lookup
+    const profileMap = new Map(
+      profiles?.map((p) => [
+        p.id,
+        p as { id: string; full_name: string; avatar_url?: string },
+      ]) || []
+    );
+
+    // Map availabilities with profiles
+    const availabilities: PSGAvailabilityWithProfile[] = [];
+
+    for (const item of rawAvailabilities) {
+      const profile = profileMap.get(item.psg_member_id);
+      if (profile) {
+        availabilities.push({
+          ...(item as PSGAvailability),
+          psg_member: profile,
+        });
+      }
+    }
+
+    if (availabilities.length === 0) {
+      return { success: true, data: [] };
+    }
 
     // Generate time slots
     const slots: AvailableTimeSlot[] = [];
     const start = new Date(startDate + "T00:00:00");
     const end = new Date(endDate + "T23:59:59");
 
-    console.log("Date range:", start, "to", end);
-
     // Iterate through each day in the range
     const currentDate = new Date(start);
+
     while (currentDate <= end) {
       const dayOfWeek = currentDate.getDay();
-      console.log(
-        "Checking date:",
-        currentDate.toISOString().split("T")[0],
-        "day:",
-        dayOfWeek
-      );
-
-      console.log(
-        "Checking date:",
-        currentDate.toISOString().split("T")[0],
-        "day:",
-        dayOfWeek
-      );
 
       // Find availabilities for this day of week
       const dayAvailabilities =
-        availabilities?.filter((av) => {
-          console.log(
-            "Availability day_of_week:",
-            av.day_of_week,
-            "comparing to:",
-            dayOfWeek
-          );
-          return av.day_of_week === dayOfWeek;
-        }) || [];
-
-      console.log("Day availabilities found:", dayAvailabilities.length);
+        availabilities?.filter((av) => av.day_of_week === dayOfWeek) || [];
 
       for (const availability of dayAvailabilities) {
         // Parse time strings (format: "HH:MM:SS")
@@ -257,28 +270,9 @@ export async function getAvailableTimeSlots(
         slotEnd.setHours(endHour, endMinute, endSecond || 0, 0);
 
         const now = new Date();
-        console.log(
-          "Slot window (UTC):",
-          slotStart.toISOString(),
-          "to",
-          slotEnd.toISOString()
-        );
-        console.log(
-          "Slot window (local):",
-          slotStart.toLocaleString(),
-          "to",
-          slotEnd.toLocaleString()
-        );
-        console.log(
-          "Current time (now):",
-          now.toISOString(),
-          "(local:",
-          now.toLocaleString() + ")"
-        );
 
         // Skip if slot is in the past
         if (slotEnd <= now) {
-          console.log("Skipping past slot - slot ends before now");
           continue;
         }
 
@@ -302,7 +296,6 @@ export async function getAvailableTimeSlots(
 
           if (nextSlot <= slotEnd) {
             // Format the date and time with explicit timezone for Asia/Manila (UTC+8)
-            // PostgreSQL TIMESTAMP WITH TIME ZONE requires proper format
             const year = currentSlot.getFullYear();
             const month = String(currentSlot.getMonth() + 1).padStart(2, "0");
             const day = String(currentSlot.getDate()).padStart(2, "0");
@@ -327,26 +320,15 @@ export async function getAvailableTimeSlots(
               console.error("RPC error:", rpcError);
             }
 
-            console.log(
-              "Slot availability check:",
-              appointmentTimestamp,
-              "(ISO:",
-              currentSlot.toISOString() + ") Available:",
-              isAvailable
-            );
-
             if (isAvailable) {
-              const psgMember = (availability as PSGAvailabilityWithProfile)
-                .psg_member;
+              const psgMember = availability.psg_member;
+
+              // Check if psg_member data exists
+              if (!psgMember) {
+                continue;
+              }
 
               // Store the full timestamp for accurate booking with timezone
-              const year = currentSlot.getFullYear();
-              const month = String(currentSlot.getMonth() + 1).padStart(2, "0");
-              const day = String(currentSlot.getDate()).padStart(2, "0");
-              const hours = String(currentSlot.getHours()).padStart(2, "0");
-              const minutes = String(currentSlot.getMinutes()).padStart(2, "0");
-              const seconds = String(currentSlot.getSeconds()).padStart(2, "0");
-              // Include +08:00 timezone for Asia/Manila (Philippines)
               const appointmentTimestampForBooking = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}+08:00`;
 
               slots.push({
@@ -360,7 +342,7 @@ export async function getAvailableTimeSlots(
                   .substring(0, 5),
                 end_time: nextSlot.toTimeString().split(" ")[0].substring(0, 5),
                 duration_minutes: durationMinutes,
-                appointment_timestamp: appointmentTimestampForBooking, // Add this for booking
+                appointment_timestamp: appointmentTimestampForBooking,
               });
             }
           }
@@ -373,11 +355,14 @@ export async function getAvailableTimeSlots(
       currentDate.setDate(currentDate.getDate() + 1);
     }
 
-    console.log("Total slots generated:", slots.length);
     return { success: true, data: slots };
   } catch (error) {
-    console.error("Unexpected error:", error);
-    return { success: false, error: "An unexpected error occurred" };
+    console.error("Error in getAvailableTimeSlots:", error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "An unexpected error occurred",
+    };
   }
 }
 
