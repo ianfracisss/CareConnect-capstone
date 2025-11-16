@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useAlert } from "@/components/AlertProvider";
+import { decryptMessage } from "@/lib/encryption";
 import {
   getOrCreateConversation,
   getMessages,
@@ -366,7 +367,12 @@ export function ChatWidget() {
                             }}
                           >
                             <p className="text-sm whitespace-pre-wrap break-words">
-                              {message.content}
+                              {conversationId
+                                ? decryptMessage(
+                                    message.content,
+                                    conversationId
+                                  )
+                                : message.content}
                             </p>
                           </div>
                           <p

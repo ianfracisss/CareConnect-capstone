@@ -250,52 +250,6 @@ export default async function DashboardPage() {
                     </div>
                   </div>
                 </Link>
-
-                {/* Coming Soon Cards - Last */}
-                <div
-                  className="rounded-lg p-6 opacity-60"
-                  style={{
-                    background: "var(--bg-light)",
-                    border: "1px solid var(--border-muted)",
-                    boxShadow:
-                      "0 1px 2px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.015)",
-                  }}
-                >
-                  <div className="flex items-start gap-4">
-                    <div
-                      className="p-3 rounded-lg"
-                      style={{ background: "var(--bg-secondary)" }}
-                    >
-                      <MessageSquare
-                        className="w-6 h-6"
-                        style={{ color: "var(--text-muted)" }}
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <h3
-                        className="font-semibold text-lg mb-1"
-                        style={{ color: "var(--text)" }}
-                      >
-                        Message PSG Members
-                      </h3>
-                      <p
-                        className="text-sm"
-                        style={{ color: "var(--text-muted)" }}
-                      >
-                        Chat with peer support group members
-                      </p>
-                      <span
-                        className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
-                        style={{
-                          background: "var(--bg-secondary)",
-                          color: "var(--text-muted)",
-                        }}
-                      >
-                        Coming Soon
-                      </span>
-                    </div>
-                  </div>
-                </div>
               </div>
             )}
 
@@ -476,6 +430,53 @@ export default async function DashboardPage() {
                         style={{ color: "var(--text-muted)" }}
                       >
                         Manage assigned student referrals
+                      </p>
+                      <span
+                        className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
+                        style={{
+                          background: "var(--primary-20)",
+                          color: "var(--primary)",
+                        }}
+                      >
+                        Available Now
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+
+                {/* Session Documentation - Active */}
+                <Link
+                  href="/dashboard/psg/sessions"
+                  className="group rounded-lg p-6 transition-all hover:scale-105 hover:shadow-[0_4px_16px_rgba(0,0,0,0.1),0_2px_8px_rgba(0,0,0,0.06)]"
+                  style={{
+                    background: "var(--bg-light)",
+                    border: "2px solid var(--primary)",
+                    boxShadow:
+                      "0 1px 2px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.015)",
+                  }}
+                >
+                  <div className="flex items-start gap-4">
+                    <div
+                      className="p-3 rounded-lg"
+                      style={{ background: "var(--primary-20)" }}
+                    >
+                      <FileText
+                        className="w-6 h-6"
+                        style={{ color: "var(--primary)" }}
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <h3
+                        className="font-semibold text-lg mb-1"
+                        style={{ color: "var(--text)" }}
+                      >
+                        Session Documentation
+                      </h3>
+                      <p
+                        className="text-sm"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Document and review session records
                       </p>
                       <span
                         className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"

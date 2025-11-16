@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { encryptMessage } from "@/lib/encryption";
 import type {
   Conversation,
   ConversationWithProfiles,
@@ -174,10 +175,13 @@ export async function sendMessage(
       return { success: false, error: "Message cannot be empty" };
     }
 
-    console.log("Sending message:", {
+    // Encrypt the message content before storing
+    const encryptedContent = encryptMessage(content.trim(), conversationId);
+
+    console.log("Sending encrypted message:", {
       conversationId,
       userId: user.id,
-      content,
+      encrypted: true,
     });
 
     const { data: message, error } = await supabase
@@ -185,7 +189,7 @@ export async function sendMessage(
       .insert({
         conversation_id: conversationId,
         sender_id: user.id,
-        content: content.trim(),
+        content: encryptedContent,
       })
       .select()
       .single();

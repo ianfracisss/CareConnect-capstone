@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useAlert } from "@/components/AlertProvider";
+import { decryptMessage } from "@/lib/encryption";
 import {
   getConversations,
   getMessages,
@@ -147,6 +148,19 @@ export function ChatWidgetPSG() {
     }, 0);
     setTotalUnreadCount(count);
   }, [conversations]);
+
+  // Periodically refresh conversations to update unread counts
+  useEffect(() => {
+    if (!isOpen) {
+      // Load conversations initially even when closed to get unread count
+      loadConversations();
+      // Refresh every 10 seconds when closed to update unread badge
+      const interval = setInterval(() => {
+        loadConversations();
+      }, 10000);
+      return () => clearInterval(interval);
+    }
+  }, [isOpen, currentUserId]);
 
   const loadConversations = async () => {
     const result = await getConversations();
@@ -570,7 +584,12 @@ export function ChatWidgetPSG() {
                               }}
                             >
                               <p className="text-sm whitespace-pre-wrap break-words">
-                                {message.content}
+                                {selectedConversation
+                                  ? decryptMessage(
+                                      message.content,
+                                      selectedConversation.id
+                                    )
+                                  : message.content}
                               </p>
                             </div>
                             <p

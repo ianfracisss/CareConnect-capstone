@@ -35,7 +35,10 @@ export default function BookAppointmentPage() {
   const [endDate, setEndDate] = useState(nextWeek);
 
   const searchSlots = async () => {
-    if (!startDate || !endDate) return;
+    if (!startDate || !endDate) {
+      return;
+    }
+
     if (new Date(startDate) > new Date(endDate)) {
       showAlert({
         message: "Start date must be before end date",
@@ -47,14 +50,17 @@ export default function BookAppointmentPage() {
 
     try {
       setLoading(true);
+
       const result = await getAvailableTimeSlots(startDate, endDate, 60);
 
-      if (result.success && result.data) {
-        setSlots(result.data);
-        if (result.data.length === 0) {
+      if (result.success) {
+        setSlots(result.data || []);
+
+        if (!result.data || result.data.length === 0) {
           showAlert({
-            message: "No available slots found in this date range",
-            type: "warning",
+            message:
+              "No available slots found in this date range. PSG members may not have set their availability yet.",
+            type: "info",
             duration: 5000,
           });
         }
@@ -65,9 +71,9 @@ export default function BookAppointmentPage() {
           duration: 5000,
         });
       }
-    } catch {
+    } catch (error) {
       showAlert({
-        message: "An unexpected error occurred",
+        message: "An unexpected error occurred while searching for slots",
         type: "error",
         duration: 5000,
       });
@@ -99,11 +105,12 @@ export default function BookAppointmentPage() {
   }, [showAlert, router]);
 
   useEffect(() => {
-    if (startDate && endDate) {
+    // Only search slots if user is authenticated
+    if (userId && startDate && endDate) {
       searchSlots();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [startDate, endDate]);
+  }, [userId, startDate, endDate]);
 
   const handleBookAppointment = async () => {
     if (!selectedSlot) {
@@ -128,9 +135,7 @@ export default function BookAppointmentPage() {
     try {
       setLoading(true);
 
-      // Use the appointment_timestamp from the slot for accurate booking
-      // This preserves the exact time in the database timezone (Philippines)
-      const result = await createAppointment({
+      const appointmentData = {
         student_id: userId,
         psg_member_id: selectedSlot.psg_member_id,
         appointment_date: selectedSlot.appointment_timestamp,
@@ -138,7 +143,11 @@ export default function BookAppointmentPage() {
         location_type: locationType,
         meeting_link: locationType === "online" ? meetingLink : undefined,
         notes: notes || undefined,
-      });
+      };
+
+      // Use the appointment_timestamp from the slot for accurate booking
+      // This preserves the exact time in the database timezone (Philippines)
+      const result = await createAppointment(appointmentData);
 
       if (result.success) {
         showAlert({
@@ -154,7 +163,7 @@ export default function BookAppointmentPage() {
           duration: 5000,
         });
       }
-    } catch {
+    } catch (error) {
       showAlert({
         message: "An unexpected error occurred",
         type: "error",
