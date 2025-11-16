@@ -149,6 +149,19 @@ export function ChatWidgetPSG() {
     setTotalUnreadCount(count);
   }, [conversations]);
 
+  // Periodically refresh conversations to update unread counts
+  useEffect(() => {
+    if (!isOpen) {
+      // Load conversations initially even when closed to get unread count
+      loadConversations();
+      // Refresh every 10 seconds when closed to update unread badge
+      const interval = setInterval(() => {
+        loadConversations();
+      }, 10000);
+      return () => clearInterval(interval);
+    }
+  }, [isOpen, currentUserId]);
+
   const loadConversations = async () => {
     const result = await getConversations();
     if (result.success && result.data) {
