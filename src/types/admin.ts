@@ -85,6 +85,7 @@ export interface UsageReport {
   total_referrals: number;
   total_sessions: number;
   total_users: number;
+  active_students: number;
   active_psg_members: number;
 }
 
@@ -92,6 +93,7 @@ export interface AuditLog {
   id: string;
   user_id: string;
   user_name: string;
+  user_email: string;
   user_role: UserRole;
   action: string;
   table_name: string;

@@ -282,17 +282,25 @@ export async function getAppointmentReports(filters?: ReportFilters) {
     }
 
     const reports: AppointmentReport[] =
-      data?.map((apt: any) => ({
-        id: apt.id,
-        student_name: apt.student?.full_name || "Unknown",
-        student_id: apt.student?.school_id || "N/A",
-        psg_member_name: apt.psg_member?.full_name || "Unknown",
-        appointment_date: apt.appointment_date,
-        status: apt.status,
-        duration_minutes: apt.duration_minutes,
-        location_type: apt.location_type,
-        created_at: apt.created_at,
-      })) || [];
+      data?.map((apt) => {
+        const student = Array.isArray(apt.student)
+          ? apt.student[0]
+          : apt.student;
+        const psgMember = Array.isArray(apt.psg_member)
+          ? apt.psg_member[0]
+          : apt.psg_member;
+        return {
+          id: apt.id,
+          student_name: student?.full_name || "Unknown",
+          student_id: student?.school_id || "N/A",
+          psg_member_name: psgMember?.full_name || "Unknown",
+          appointment_date: apt.appointment_date,
+          status: apt.status,
+          duration_minutes: apt.duration_minutes,
+          location_type: apt.location_type,
+          created_at: apt.created_at,
+        };
+      }) || [];
 
     return { success: true, data: reports };
   } catch (error) {
@@ -345,17 +353,25 @@ export async function getReferralReports(filters?: ReportFilters) {
     }
 
     const reports: ReferralReport[] =
-      data?.map((ref: any) => ({
-        id: ref.id,
-        student_name: ref.student?.full_name || "Unknown",
-        student_id: ref.student?.school_id || "N/A",
-        source: ref.source,
-        status: ref.status,
-        severity: ref.severity,
-        assigned_psg_member: ref.assigned_psg_member?.full_name,
-        created_at: ref.created_at,
-        updated_at: ref.updated_at,
-      })) || [];
+      data?.map((ref) => {
+        const student = Array.isArray(ref.student)
+          ? ref.student[0]
+          : ref.student;
+        const assignedPsg = Array.isArray(ref.assigned_psg_member)
+          ? ref.assigned_psg_member[0]
+          : ref.assigned_psg_member;
+        return {
+          id: ref.id,
+          student_name: student?.full_name || "Unknown",
+          student_id: student?.school_id || "N/A",
+          source: ref.source,
+          status: ref.status,
+          severity: ref.severity,
+          assigned_psg_member: assignedPsg?.full_name,
+          created_at: ref.created_at,
+          updated_at: ref.updated_at,
+        };
+      }) || [];
 
     return { success: true, data: reports };
   } catch (error) {
@@ -401,17 +417,32 @@ export async function getSessionReports(filters?: ReportFilters) {
     }
 
     const reports: SessionReport[] =
-      data?.map((sess: any) => ({
-        id: sess.id,
-        student_name: sess.appointment?.student?.full_name || "Unknown",
-        student_id: sess.appointment?.student?.school_id || "N/A",
-        psg_member_name: sess.appointment?.psg_member?.full_name || "Unknown",
-        appointment_date: sess.appointment?.appointment_date || "",
-        duration_minutes: sess.duration_minutes || 0,
-        has_notes: !!sess.notes,
-        has_feedback: !!sess.feedback,
-        created_at: sess.created_at,
-      })) || [];
+      data?.map((sess) => {
+        const appointment = Array.isArray(sess.appointment)
+          ? sess.appointment[0]
+          : sess.appointment;
+        const student =
+          appointment?.student &&
+          (Array.isArray(appointment.student)
+            ? appointment.student[0]
+            : appointment.student);
+        const psgMember =
+          appointment?.psg_member &&
+          (Array.isArray(appointment.psg_member)
+            ? appointment.psg_member[0]
+            : appointment.psg_member);
+        return {
+          id: sess.id,
+          student_name: student?.full_name || "Unknown",
+          student_id: student?.school_id || "N/A",
+          psg_member_name: psgMember?.full_name || "Unknown",
+          appointment_date: appointment?.appointment_date || "",
+          duration_minutes: sess.duration_minutes || 0,
+          has_notes: !!sess.notes,
+          has_feedback: !!sess.feedback,
+          created_at: sess.created_at,
+        };
+      }) || [];
 
     return { success: true, data: reports };
   } catch (error) {
@@ -469,6 +500,25 @@ export async function getUsageReport(
       .gte("created_at", startDate)
       .lte("created_at", endDate);
 
+    // Get active students (those with appointments or referrals in period)
+    const { data: activeStudentsFromAppointments } = await supabase
+      .from("appointments")
+      .select("student_id")
+      .gte("created_at", startDate)
+      .lte("created_at", endDate);
+
+    const { data: activeStudentsFromReferrals } = await supabase
+      .from("referrals")
+      .select("student_id")
+      .gte("created_at", startDate)
+      .lte("created_at", endDate);
+
+    const studentIds = new Set([
+      ...(activeStudentsFromAppointments?.map((a) => a.student_id) || []),
+      ...(activeStudentsFromReferrals?.map((r) => r.student_id) || []),
+    ]);
+    const active_students = studentIds.size;
+
     // Get active PSG members (those with appointments in period)
     const { data: activePSG } = await supabase
       .from("appointments")
@@ -489,6 +539,7 @@ export async function getUsageReport(
       total_referrals: total_referrals || 0,
       total_sessions: total_sessions || 0,
       total_users: total_users || 0,
+      active_students,
       active_psg_members,
     };
 
@@ -512,7 +563,7 @@ export async function getAuditLogs(limit: number = 100) {
       .select(
         `
         *,
-        user:profiles(full_name, role)
+        user:profiles(full_name, email, role)
       `
       )
       .order("created_at", { ascending: false })
@@ -524,17 +575,21 @@ export async function getAuditLogs(limit: number = 100) {
     }
 
     const logs: AuditLog[] =
-      data?.map((log: any) => ({
-        id: log.id,
-        user_id: log.user_id,
-        user_name: log.user?.full_name || "Unknown",
-        user_role: log.user?.role || "student",
-        action: log.action,
-        table_name: log.table_name,
-        record_id: log.record_id,
-        details: log.details,
-        created_at: log.created_at,
-      })) || [];
+      data?.map((log) => {
+        const user = Array.isArray(log.user) ? log.user[0] : log.user;
+        return {
+          id: log.id,
+          user_id: log.user_id,
+          user_name: user?.full_name || "Unknown",
+          user_email: user?.email || "Unknown",
+          user_role: user?.role || "student",
+          action: log.action,
+          table_name: log.table_name,
+          record_id: log.record_id,
+          details: log.details,
+          created_at: log.created_at,
+        };
+      }) || [];
 
     return { success: true, data: logs };
   } catch (error) {
