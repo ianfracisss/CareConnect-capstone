@@ -62,7 +62,7 @@ export async function createReferral(data: {
   }
 }
 
-// Get all referrals for PSG members
+// Get all referrals for PSG members/admins
 export async function getAllReferrals(): Promise<
   ActionResponse<ReferralWithProfiles[]>
 > {
@@ -90,6 +90,40 @@ export async function getAllReferrals(): Promise<
   } catch (error) {
     console.error("Unexpected error fetching referrals:", error);
     return { success: false, error: "Failed to fetch referrals" };
+  }
+}
+
+// Get referrals for a specific PSG member (assigned to them OR unassigned)
+export async function getPSGAssignedReferrals(
+  psgMemberId: string
+): Promise<ActionResponse<ReferralWithProfiles[]>> {
+  try {
+    const supabase = await createClient();
+
+    const { data: referrals, error } = await supabase
+      .from("referrals")
+      .select(
+        `
+        *,
+        student:profiles!referrals_student_id_fkey(id, full_name, email, school_id),
+        assigned_psg_member:profiles!referrals_assigned_psg_member_id_fkey(id, full_name, email),
+        reviewed_by_profile:profiles!referrals_reviewed_by_fkey(id, full_name)
+      `
+      )
+      .or(
+        `assigned_psg_member_id.eq.${psgMemberId},assigned_psg_member_id.is.null`
+      )
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Error fetching PSG assigned referrals:", error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true, data: referrals };
+  } catch (error) {
+    console.error("Unexpected error fetching PSG assigned referrals:", error);
+    return { success: false, error: "Failed to fetch assigned referrals" };
   }
 }
 

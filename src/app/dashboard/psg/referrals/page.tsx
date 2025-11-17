@@ -6,7 +6,8 @@ import { DashboardClientWrapper } from "@/components/DashboardClientWrapper";
 import { DashboardNavbar } from "@/components/DashboardNavbar";
 import { Loader } from "@/components/Loader";
 import { useAlert } from "@/components/AlertProvider";
-import { getAllReferrals } from "@/actions/referrals";
+import { createClient } from "@/lib/supabase/client";
+import { getAllReferrals, getPSGAssignedReferrals } from "@/actions/referrals";
 import {
   ReferralWithProfiles,
   ReferralStatus,
@@ -14,7 +15,7 @@ import {
   REFERRAL_SOURCE_LABELS,
   SEVERITY_COLORS,
 } from "@/types/referrals";
-import { AlertCircle, User, Calendar, FileText, Filter } from "lucide-react";
+import { User, Calendar, FileText, Filter } from "lucide-react";
 
 export default function PSGReferralsPage() {
   const router = useRouter();
@@ -23,13 +24,36 @@ export default function PSGReferralsPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | ReferralStatus>("all");
 
-  useEffect(() => {
-    loadReferrals();
-  }, []);
-
-  const loadReferrals = async () => {
+  const loadUserAndReferrals = async () => {
     try {
-      const result = await getAllReferrals();
+      const supabase = createClient();
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
+
+      if (authError || !user) {
+        showAlert({
+          message: "Please login first",
+          type: "error",
+          duration: 5000,
+        });
+        router.push("/login");
+        return;
+      }
+
+      // Check user role
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+
+      // Admins see all referrals, PSG members see only their assigned ones
+      const result =
+        profile?.role === "admin"
+          ? await getAllReferrals()
+          : await getPSGAssignedReferrals(user.id);
 
       if (result.success && result.data) {
         setReferrals(result.data);
@@ -51,6 +75,11 @@ export default function PSGReferralsPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadUserAndReferrals();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const filteredReferrals =
     filter === "all"
