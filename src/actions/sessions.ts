@@ -204,6 +204,56 @@ export async function getSessionByAppointmentId(appointmentId: string) {
   }
 }
 
+// Get all sessions (for admin)
+export async function getAllSessions() {
+  try {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+      .from("sessions")
+      .select(
+        `
+        *,
+        appointment:appointments!inner(
+          id,
+          appointment_date,
+          status,
+          duration_minutes,
+          location_type,
+          meeting_link,
+          notes,
+          psg_member_id,
+          student:student_id(
+            id,
+            full_name,
+            school_id,
+            avatar_url
+          ),
+          psg_member:psg_member_id(
+            id,
+            full_name,
+            avatar_url
+          )
+        )
+      `
+      )
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Get all sessions error:", error);
+      return { success: false, error: "Failed to fetch sessions" };
+    }
+
+    return {
+      success: true,
+      data: data as unknown as SessionWithAppointment[],
+    };
+  } catch (error) {
+    console.error("Unexpected error:", error);
+    return { success: false, error: "An unexpected error occurred" };
+  }
+}
+
 export async function getPSGMemberSessions(psgMemberId: string) {
   try {
     const supabase = await createClient();
@@ -330,6 +380,57 @@ export async function deleteSession(sessionId: string) {
 // =============================
 // Session Analytics
 // =============================
+
+// Get summary of all sessions (for admin)
+export async function getAllSessionsSummary() {
+  try {
+    const supabase = await createClient();
+
+    // Get all sessions
+    const { data: sessions, error } = await supabase.from("sessions").select(
+      `
+        duration_minutes,
+        created_at
+      `
+    );
+
+    if (error) {
+      console.error("Get all sessions summary error:", error);
+      return { success: false, error: "Failed to fetch session summary" };
+    }
+
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() - now.getDay());
+
+    const totalSessions = sessions.length;
+    const totalDuration = sessions.reduce(
+      (sum, s) => sum + (s.duration_minutes || 0),
+      0
+    );
+    const sessionsThisMonth = sessions.filter(
+      (s) => new Date(s.created_at) >= startOfMonth
+    ).length;
+    const sessionsThisWeek = sessions.filter(
+      (s) => new Date(s.created_at) >= startOfWeek
+    ).length;
+
+    const summary: SessionSummary = {
+      total_sessions: totalSessions,
+      total_duration_minutes: totalDuration,
+      average_duration_minutes:
+        totalSessions > 0 ? Math.round(totalDuration / totalSessions) : 0,
+      sessions_this_month: sessionsThisMonth,
+      sessions_this_week: sessionsThisWeek,
+    };
+
+    return { success: true, data: summary };
+  } catch (error) {
+    console.error("Unexpected error:", error);
+    return { success: false, error: "An unexpected error occurred" };
+  }
+}
 
 export async function getPSGSessionSummary(psgMemberId: string) {
   try {
