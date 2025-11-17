@@ -203,7 +203,7 @@ export default function StudentAppointmentsPage() {
                         className="text-base font-bold"
                         style={{ color: "var(--text)" }}
                       >
-                        {apt.psg_member.full_name}
+                        {apt.psg_member?.full_name || "PSG Member"}
                       </h3>
                       <span
                         className="px-3 py-1 rounded-full text-xs font-medium shadow-[0_1px_2px_rgba(0,0,0,0.15)]"

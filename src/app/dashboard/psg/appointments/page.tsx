@@ -3,7 +3,11 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { getPSGAppointments, confirmAppointment } from "@/actions/appointments";
+import {
+  getPSGAppointments,
+  getAllPSGAppointments,
+  confirmAppointment,
+} from "@/actions/appointments";
 import { useAlert } from "@/components/AlertProvider";
 import type {
   AppointmentWithProfiles,
@@ -26,6 +30,7 @@ export default function PSGAppointmentsPage() {
   const [filter, setFilter] = useState<"all" | "pending" | "upcoming" | "past">(
     "pending"
   );
+  const [userRole, setUserRole] = useState<string | null>(null);
 
   const loadAppointments = async () => {
     try {
@@ -45,7 +50,20 @@ export default function PSGAppointmentsPage() {
         return;
       }
 
-      const result = await getPSGAppointments(user.id);
+      // Check user role
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+
+      setUserRole(profile?.role || null);
+
+      // Admins see all appointments, PSG members see only their own
+      const result =
+        profile?.role === "admin"
+          ? await getAllPSGAppointments()
+          : await getPSGAppointments(user.id);
 
       if (result.success && result.data) {
         setAppointments(result.data);
@@ -192,7 +210,7 @@ export default function PSGAppointmentsPage() {
               className="text-base font-bold mb-2"
               style={{ color: "var(--text)" }}
             >
-              My Appointments
+              {userRole === "admin" ? "All Appointments" : "My Appointments"}
             </h1>
             {pendingCount > 0 && (
               <p className="text-sm" style={{ color: "var(--text-muted)" }}>
@@ -296,17 +314,30 @@ export default function PSGAppointmentsPage() {
                       >
                         {apt.student.full_name}
                       </h3>
-                      {apt.student.school_id && (
-                        <span
-                          className="text-xs px-2 py-0.5 rounded"
-                          style={{
-                            background: "var(--bg-secondary)",
-                            color: "var(--text-muted)",
-                          }}
-                        >
-                          ID: {apt.student.school_id}
-                        </span>
-                      )}
+                      <div className="flex items-center gap-2">
+                        {apt.student.school_id && (
+                          <span
+                            className="text-xs px-2 py-0.5 rounded"
+                            style={{
+                              background: "var(--bg-secondary)",
+                              color: "var(--text-muted)",
+                            }}
+                          >
+                            ID: {apt.student.school_id}
+                          </span>
+                        )}
+                        {userRole === "admin" && apt.psg_member && (
+                          <span
+                            className="text-xs px-2 py-0.5 rounded"
+                            style={{
+                              background: "var(--primary-20)",
+                              color: "var(--primary)",
+                            }}
+                          >
+                            PSG
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                   <span

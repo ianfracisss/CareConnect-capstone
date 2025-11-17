@@ -3,16 +3,15 @@ import { redirect } from "next/navigation";
 import { DashboardNavbar } from "@/components/DashboardNavbar";
 import { formatRole } from "@/lib/utils/auth";
 import { DashboardClientWrapper } from "@/components/DashboardClientWrapper";
+import { getSystemStats } from "@/actions/admin";
 import Link from "next/link";
 import {
   ClipboardList,
   FileText,
   Calendar,
-  MessageSquare,
   TrendingUp,
   Users,
   BarChart3,
-  Settings,
   Shield,
 } from "lucide-react";
 
@@ -22,6 +21,10 @@ export default async function DashboardPage() {
   if (!user) {
     redirect("/login");
   }
+
+  // Fetch system stats for admin users
+  const statsResult = user.role === "admin" ? await getSystemStats() : null;
+  const stats = statsResult?.success ? statsResult.data : null;
 
   return (
     // Restyle Dashboard Page on every role
@@ -52,14 +55,218 @@ export default async function DashboardPage() {
             </div>
           </div>
 
+          {/* System Overview - Admin Only */}
+          {user.role === "admin" && stats && (
+            <div className="mb-8">
+              <h2
+                className="text-base font-bold mb-6"
+                style={{ color: "var(--text)" }}
+              >
+                System Overview
+              </h2>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <div
+                  className="p-6 rounded-lg"
+                  style={{
+                    background: "var(--bg-light)",
+                    border: "1px solid var(--border-muted)",
+                    boxShadow:
+                      "0 1px 2px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.03)",
+                  }}
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <div
+                      className="p-2 rounded-lg"
+                      style={{ background: "var(--primary-20)" }}
+                    >
+                      <Users
+                        className="w-5 h-5"
+                        style={{ color: "var(--primary)" }}
+                      />
+                    </div>
+                    <div>
+                      <p
+                        className="text-2xl font-bold"
+                        style={{ color: "var(--text)" }}
+                      >
+                        {stats.total_users}
+                      </p>
+                      <p
+                        className="text-sm"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Total Users
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    className="mt-3 pt-3 border-t"
+                    style={{ borderColor: "var(--border-muted)" }}
+                  >
+                    <div
+                      className="flex justify-between text-sm"
+                      style={{ color: "var(--text-muted)" }}
+                    >
+                      <span>Students: {stats.total_students}</span>
+                      <span>PSG: {stats.total_psg_members}</span>
+                      <span>Admins: {stats.total_admins}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  className="p-6 rounded-lg"
+                  style={{
+                    background: "var(--bg-light)",
+                    border: "1px solid var(--border-muted)",
+                    boxShadow:
+                      "0 1px 2px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.03)",
+                  }}
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <div
+                      className="p-2 rounded-lg"
+                      style={{ background: "var(--success-20)" }}
+                    >
+                      <Calendar
+                        className="w-5 h-5"
+                        style={{ color: "var(--success)" }}
+                      />
+                    </div>
+                    <div>
+                      <p
+                        className="text-2xl font-bold"
+                        style={{ color: "var(--text)" }}
+                      >
+                        {stats.total_appointments}
+                      </p>
+                      <p
+                        className="text-sm"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Total Appointments
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    className="mt-3 pt-3 border-t"
+                    style={{ borderColor: "var(--border-muted)" }}
+                  >
+                    <p
+                      className="text-sm"
+                      style={{ color: "var(--text-muted)" }}
+                    >
+                      This Month: {stats.appointments_this_month}
+                    </p>
+                  </div>
+                </div>
+
+                <div
+                  className="p-6 rounded-lg"
+                  style={{
+                    background: "var(--bg-light)",
+                    border: "1px solid var(--border-muted)",
+                    boxShadow:
+                      "0 1px 2px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.03)",
+                  }}
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <div
+                      className="p-2 rounded-lg"
+                      style={{ background: "var(--warning-20)" }}
+                    >
+                      <ClipboardList
+                        className="w-5 h-5"
+                        style={{ color: "var(--warning)" }}
+                      />
+                    </div>
+                    <div>
+                      <p
+                        className="text-2xl font-bold"
+                        style={{ color: "var(--text)" }}
+                      >
+                        {stats.total_referrals}
+                      </p>
+                      <p
+                        className="text-sm"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Total Referrals
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    className="mt-3 pt-3 border-t"
+                    style={{ borderColor: "var(--border-muted)" }}
+                  >
+                    <p
+                      className="text-sm"
+                      style={{ color: "var(--text-muted)" }}
+                    >
+                      This Month: {stats.referrals_this_month}
+                    </p>
+                  </div>
+                </div>
+
+                <div
+                  className="p-6 rounded-lg"
+                  style={{
+                    background: "var(--bg-light)",
+                    border: "1px solid var(--border-muted)",
+                    boxShadow:
+                      "0 1px 2px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.03)",
+                  }}
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <div
+                      className="p-2 rounded-lg"
+                      style={{ background: "var(--info-20)" }}
+                    >
+                      <FileText
+                        className="w-5 h-5"
+                        style={{ color: "var(--info)" }}
+                      />
+                    </div>
+                    <div>
+                      <p
+                        className="text-2xl font-bold"
+                        style={{ color: "var(--text)" }}
+                      >
+                        {stats.total_sessions}
+                      </p>
+                      <p
+                        className="text-sm"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Total Sessions
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    className="mt-3 pt-3 border-t"
+                    style={{ borderColor: "var(--border-muted)" }}
+                  >
+                    <p
+                      className="text-sm"
+                      style={{ color: "var(--text-muted)" }}
+                    >
+                      This Month: {stats.sessions_this_month}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div>
             <h2
               className="text-base font-bold mb-6"
               style={{ color: "var(--text)" }}
             >
-              Quick Access
-            </h2>
-
+              {user.role === "admin"
+                ? "Administrative Functions"
+                : "Quick Access"}
+            </h2>{" "}
             {/* Student Dashboard */}
             {user.role === "student" && (
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -252,7 +459,6 @@ export default async function DashboardPage() {
                 </Link>
               </div>
             )}
-
             {/* PSG Member Dashboard */}
             {user.role === "psg_member" && (
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -492,15 +698,16 @@ export default async function DashboardPage() {
                 </Link>
               </div>
             )}
-
             {/* Admin Dashboard */}
             {user.role === "admin" && (
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <div
-                  className="rounded-lg p-6 opacity-60"
+                {/* User Management - Active */}
+                <Link
+                  href="/dashboard/admin/users"
+                  className="group rounded-lg p-6 transition-all hover:scale-105 hover:shadow-[0_4px_16px_rgba(0,0,0,0.1),0_2px_8px_rgba(0,0,0,0.06)]"
                   style={{
                     background: "var(--bg-light)",
-                    border: "1px solid var(--border-muted)",
+                    border: "2px solid var(--primary)",
                     boxShadow:
                       "0 1px 2px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.015)",
                   }}
@@ -508,11 +715,11 @@ export default async function DashboardPage() {
                   <div className="flex items-start gap-4">
                     <div
                       className="p-3 rounded-lg"
-                      style={{ background: "var(--bg-secondary)" }}
+                      style={{ background: "var(--primary-20)" }}
                     >
                       <Users
                         className="w-6 h-6"
-                        style={{ color: "var(--text-muted)" }}
+                        style={{ color: "var(--primary)" }}
                       />
                     </div>
                     <div className="flex-1">
@@ -526,26 +733,28 @@ export default async function DashboardPage() {
                         className="text-sm"
                         style={{ color: "var(--text-muted)" }}
                       >
-                        Manage users and permissions
+                        Manage users, roles, and permissions
                       </p>
                       <span
                         className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
                         style={{
-                          background: "var(--bg-secondary)",
-                          color: "var(--text-muted)",
+                          background: "var(--primary-20)",
+                          color: "var(--primary)",
                         }}
                       >
-                        Coming Soon
+                        Available Now
                       </span>
                     </div>
                   </div>
-                </div>
+                </Link>
 
-                <div
-                  className="rounded-lg p-6 opacity-60"
+                {/* Reports & Analytics - Active */}
+                <Link
+                  href="/dashboard/admin/reports"
+                  className="group rounded-lg p-6 transition-all hover:scale-105 hover:shadow-[0_4px_16px_rgba(0,0,0,0.1),0_2px_8px_rgba(0,0,0,0.06)]"
                   style={{
                     background: "var(--bg-light)",
-                    border: "1px solid var(--border-muted)",
+                    border: "2px solid var(--primary)",
                     boxShadow:
                       "0 1px 2px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.015)",
                   }}
@@ -553,11 +762,11 @@ export default async function DashboardPage() {
                   <div className="flex items-start gap-4">
                     <div
                       className="p-3 rounded-lg"
-                      style={{ background: "var(--bg-secondary)" }}
+                      style={{ background: "var(--primary-20)" }}
                     >
                       <BarChart3
                         className="w-6 h-6"
-                        style={{ color: "var(--text-muted)" }}
+                        style={{ color: "var(--primary)" }}
                       />
                     </div>
                     <div className="flex-1">
@@ -565,7 +774,7 @@ export default async function DashboardPage() {
                         className="font-semibold text-lg mb-1"
                         style={{ color: "var(--text)" }}
                       >
-                        Analytics Dashboard
+                        Reports & Analytics
                       </h3>
                       <p
                         className="text-sm"
@@ -576,21 +785,23 @@ export default async function DashboardPage() {
                       <span
                         className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
                         style={{
-                          background: "var(--bg-secondary)",
-                          color: "var(--text-muted)",
+                          background: "var(--primary-20)",
+                          color: "var(--primary)",
                         }}
                       >
-                        Coming Soon
+                        Available Now
                       </span>
                     </div>
                   </div>
-                </div>
+                </Link>
 
-                <div
-                  className="rounded-lg p-6 opacity-60"
+                {/* Audit Logs - Active */}
+                <Link
+                  href="/dashboard/admin/audit"
+                  className="group rounded-lg p-6 transition-all hover:scale-105 hover:shadow-[0_4px_16px_rgba(0,0,0,0.1),0_2px_8px_rgba(0,0,0,0.06)]"
                   style={{
                     background: "var(--bg-light)",
-                    border: "1px solid var(--border-muted)",
+                    border: "2px solid var(--primary)",
                     boxShadow:
                       "0 1px 2px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.015)",
                   }}
@@ -598,11 +809,11 @@ export default async function DashboardPage() {
                   <div className="flex items-start gap-4">
                     <div
                       className="p-3 rounded-lg"
-                      style={{ background: "var(--bg-secondary)" }}
+                      style={{ background: "var(--primary-20)" }}
                     >
                       <Shield
                         className="w-6 h-6"
-                        style={{ color: "var(--text-muted)" }}
+                        style={{ color: "var(--primary)" }}
                       />
                     </div>
                     <div className="flex-1">
@@ -621,21 +832,23 @@ export default async function DashboardPage() {
                       <span
                         className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
                         style={{
-                          background: "var(--bg-secondary)",
-                          color: "var(--text-muted)",
+                          background: "var(--primary-20)",
+                          color: "var(--primary)",
                         }}
                       >
-                        Coming Soon
+                        Available Now
                       </span>
                     </div>
                   </div>
-                </div>
+                </Link>
 
-                <div
-                  className="rounded-lg p-6 opacity-60"
+                {/* Review Screenings - Active */}
+                <Link
+                  href="/dashboard/psg/screenings"
+                  className="group rounded-lg p-6 transition-all hover:scale-105 hover:shadow-[0_4px_16px_rgba(0,0,0,0.1),0_2px_8px_rgba(0,0,0,0.06)]"
                   style={{
                     background: "var(--bg-light)",
-                    border: "1px solid var(--border-muted)",
+                    border: "2px solid var(--primary)",
                     boxShadow:
                       "0 1px 2px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.015)",
                   }}
@@ -643,11 +856,11 @@ export default async function DashboardPage() {
                   <div className="flex items-start gap-4">
                     <div
                       className="p-3 rounded-lg"
-                      style={{ background: "var(--bg-secondary)" }}
+                      style={{ background: "var(--primary-20)" }}
                     >
-                      <Settings
+                      <ClipboardList
                         className="w-6 h-6"
-                        style={{ color: "var(--text-muted)" }}
+                        style={{ color: "var(--primary)" }}
                       />
                     </div>
                     <div className="flex-1">
@@ -655,26 +868,214 @@ export default async function DashboardPage() {
                         className="font-semibold text-lg mb-1"
                         style={{ color: "var(--text)" }}
                       >
-                        System Settings
+                        Review Screenings
                       </h3>
                       <p
                         className="text-sm"
                         style={{ color: "var(--text-muted)" }}
                       >
-                        Configure system preferences
+                        Review student mental health screenings
                       </p>
                       <span
                         className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
                         style={{
-                          background: "var(--bg-secondary)",
-                          color: "var(--text-muted)",
+                          background: "var(--primary-20)",
+                          color: "var(--primary)",
                         }}
                       >
-                        Coming Soon
+                        Available Now
                       </span>
                     </div>
                   </div>
-                </div>
+                </Link>
+
+                {/* All Appointments - Active */}
+                <Link
+                  href="/dashboard/psg/appointments"
+                  className="group rounded-lg p-6 transition-all hover:scale-105 hover:shadow-[0_4px_16px_rgba(0,0,0,0.1),0_2px_8px_rgba(0,0,0,0.06)]"
+                  style={{
+                    background: "var(--bg-light)",
+                    border: "2px solid var(--primary)",
+                    boxShadow:
+                      "0 1px 2px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.015)",
+                  }}
+                >
+                  <div className="flex items-start gap-4">
+                    <div
+                      className="p-3 rounded-lg"
+                      style={{ background: "var(--primary-20)" }}
+                    >
+                      <Calendar
+                        className="w-6 h-6"
+                        style={{ color: "var(--primary)" }}
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <h3
+                        className="font-semibold text-lg mb-1"
+                        style={{ color: "var(--text)" }}
+                      >
+                        All Appointments
+                      </h3>
+                      <p
+                        className="text-sm"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        View and manage all appointments
+                      </p>
+                      <span
+                        className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
+                        style={{
+                          background: "var(--primary-20)",
+                          color: "var(--primary)",
+                        }}
+                      >
+                        Available Now
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+
+                {/* All Referrals - Active */}
+                <Link
+                  href="/dashboard/psg/referrals"
+                  className="group rounded-lg p-6 transition-all hover:scale-105 hover:shadow-[0_4px_16px_rgba(0,0,0,0.1),0_2px_8px_rgba(0,0,0,0.06)]"
+                  style={{
+                    background: "var(--bg-light)",
+                    border: "2px solid var(--primary)",
+                    boxShadow:
+                      "0 1px 2px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.015)",
+                  }}
+                >
+                  <div className="flex items-start gap-4">
+                    <div
+                      className="p-3 rounded-lg"
+                      style={{ background: "var(--primary-20)" }}
+                    >
+                      <Users
+                        className="w-6 h-6"
+                        style={{ color: "var(--primary)" }}
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <h3
+                        className="font-semibold text-lg mb-1"
+                        style={{ color: "var(--text)" }}
+                      >
+                        All Referrals
+                      </h3>
+                      <p
+                        className="text-sm"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        View and manage all referrals
+                      </p>
+                      <span
+                        className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
+                        style={{
+                          background: "var(--primary-20)",
+                          color: "var(--primary)",
+                        }}
+                      >
+                        Available Now
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+
+                {/* All Sessions - Active */}
+                <Link
+                  href="/dashboard/psg/sessions"
+                  className="group rounded-lg p-6 transition-all hover:scale-105 hover:shadow-[0_4px_16px_rgba(0,0,0,0.1),0_2px_8px_rgba(0,0,0,0.06)]"
+                  style={{
+                    background: "var(--bg-light)",
+                    border: "2px solid var(--primary)",
+                    boxShadow:
+                      "0 1px 2px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.015)",
+                  }}
+                >
+                  <div className="flex items-start gap-4">
+                    <div
+                      className="p-3 rounded-lg"
+                      style={{ background: "var(--primary-20)" }}
+                    >
+                      <FileText
+                        className="w-6 h-6"
+                        style={{ color: "var(--primary)" }}
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <h3
+                        className="font-semibold text-lg mb-1"
+                        style={{ color: "var(--text)" }}
+                      >
+                        All Sessions
+                      </h3>
+                      <p
+                        className="text-sm"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        View all session documentation
+                      </p>
+                      <span
+                        className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
+                        style={{
+                          background: "var(--primary-20)",
+                          color: "var(--primary)",
+                        }}
+                      >
+                        Available Now
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+
+                {/* My Availability - Active */}
+                <Link
+                  href="/dashboard/psg/availability"
+                  className="group rounded-lg p-6 transition-all hover:scale-105 hover:shadow-[0_4px_16px_rgba(0,0,0,0.1),0_2px_8px_rgba(0,0,0,0.06)]"
+                  style={{
+                    background: "var(--bg-light)",
+                    border: "2px solid var(--primary)",
+                    boxShadow:
+                      "0 1px 2px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.015)",
+                  }}
+                >
+                  <div className="flex items-start gap-4">
+                    <div
+                      className="p-3 rounded-lg"
+                      style={{ background: "var(--primary-20)" }}
+                    >
+                      <Calendar
+                        className="w-6 h-6"
+                        style={{ color: "var(--primary)" }}
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <h3
+                        className="font-semibold text-lg mb-1"
+                        style={{ color: "var(--text)" }}
+                      >
+                        My Availability
+                      </h3>
+                      <p
+                        className="text-sm"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Set your weekly schedule
+                      </p>
+                      <span
+                        className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
+                        style={{
+                          background: "var(--primary-20)",
+                          color: "var(--primary)",
+                        }}
+                      >
+                        Available Now
+                      </span>
+                    </div>
+                  </div>
+                </Link>
               </div>
             )}
           </div>

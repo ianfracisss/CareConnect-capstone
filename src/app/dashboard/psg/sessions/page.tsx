@@ -1,7 +1,12 @@
 import { getUser } from "@/lib/actions/auth";
 import { redirect } from "next/navigation";
 import { DashboardNavbar } from "@/components/DashboardNavbar";
-import { getPSGMemberSessions, getPSGSessionSummary } from "@/actions/sessions";
+import {
+  getPSGMemberSessions,
+  getPSGSessionSummary,
+  getAllSessions,
+  getAllSessionsSummary,
+} from "@/actions/sessions";
 import Link from "next/link";
 import {
   FileText,
@@ -15,14 +20,16 @@ import {
 export default async function PSGSessionsPage() {
   const user = await getUser();
 
-  if (!user || user.role !== "psg_member") {
+  if (!user || (user.role !== "psg_member" && user.role !== "admin")) {
     redirect("/dashboard");
   }
 
-  const [sessionsResult, summaryResult] = await Promise.all([
-    getPSGMemberSessions(user.id),
-    getPSGSessionSummary(user.id),
-  ]);
+  // Admins see all sessions, PSG members see only their own
+  const [sessionsResult, summaryResult] = await Promise.all(
+    user.role === "admin"
+      ? [getAllSessions(), getAllSessionsSummary()]
+      : [getPSGMemberSessions(user.id), getPSGSessionSummary(user.id)]
+  );
 
   const sessions = sessionsResult.success ? sessionsResult.data || [] : [];
   const summary = summaryResult.success ? summaryResult.data : null;

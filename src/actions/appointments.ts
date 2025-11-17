@@ -5,7 +5,6 @@ import { revalidatePath } from "next/cache";
 import type {
   CreateAppointmentInput,
   UpdateAppointmentInput,
-  Appointment,
   AppointmentWithProfiles,
   AvailabilityCheckInput,
 } from "@/types/appointments";
@@ -119,7 +118,8 @@ export async function getPSGAppointments(psgMemberId: string) {
       .select(
         `
         *,
-        student:profiles!student_id(id, full_name, school_id, avatar_url)
+        student:profiles!student_id(id, full_name, school_id, avatar_url),
+        psg_member:profiles!psg_member_id(id, full_name, avatar_url)
       `
       )
       .eq("psg_member_id", psgMemberId)
@@ -127,6 +127,51 @@ export async function getPSGAppointments(psgMemberId: string) {
 
     if (error) {
       console.error("Get PSG appointments error:", error);
+      return { success: false, error: "Failed to fetch appointments" };
+    }
+
+    return { success: true, data: data as AppointmentWithProfiles[] };
+  } catch (error) {
+    console.error("Unexpected error:", error);
+    return { success: false, error: "An unexpected error occurred" };
+  }
+}
+
+export async function getAllPSGAppointments() {
+  try {
+    const supabase = await createClient();
+
+    // Check if user is admin
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      return { success: false, error: "Unauthorized" };
+    }
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    if (profile?.role !== "admin") {
+      return { success: false, error: "Only admins can view all appointments" };
+    }
+
+    const { data, error } = await supabase
+      .from("appointments")
+      .select(
+        `
+        *,
+        student:profiles!student_id(id, full_name, school_id, avatar_url),
+        psg_member:profiles!psg_member_id(id, full_name, avatar_url)
+      `
+      )
+      .order("appointment_date", { ascending: false });
+
+    if (error) {
+      console.error("Get all PSG appointments error:", error);
       return { success: false, error: "Failed to fetch appointments" };
     }
 

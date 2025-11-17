@@ -47,7 +47,7 @@ export interface AppointmentWithProfiles extends Appointment {
     school_id: string;
     avatar_url?: string;
   };
-  psg_member: {
+  psg_member?: {
     id: string;
     full_name: string;
     avatar_url?: string;
