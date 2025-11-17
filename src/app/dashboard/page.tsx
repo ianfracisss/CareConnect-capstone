@@ -3,16 +3,15 @@ import { redirect } from "next/navigation";
 import { DashboardNavbar } from "@/components/DashboardNavbar";
 import { formatRole } from "@/lib/utils/auth";
 import { DashboardClientWrapper } from "@/components/DashboardClientWrapper";
+import { getSystemStats } from "@/actions/admin";
 import Link from "next/link";
 import {
   ClipboardList,
   FileText,
   Calendar,
-  MessageSquare,
   TrendingUp,
   Users,
   BarChart3,
-  Settings,
   Shield,
 } from "lucide-react";
 
@@ -22,6 +21,10 @@ export default async function DashboardPage() {
   if (!user) {
     redirect("/login");
   }
+
+  // Fetch system stats for admin users
+  const statsResult = user.role === "admin" ? await getSystemStats() : null;
+  const stats = statsResult?.success ? statsResult.data : null;
 
   return (
     // Restyle Dashboard Page on every role
@@ -52,14 +55,218 @@ export default async function DashboardPage() {
             </div>
           </div>
 
+          {/* System Overview - Admin Only */}
+          {user.role === "admin" && stats && (
+            <div className="mb-8">
+              <h2
+                className="text-base font-bold mb-6"
+                style={{ color: "var(--text)" }}
+              >
+                System Overview
+              </h2>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <div
+                  className="p-6 rounded-lg"
+                  style={{
+                    background: "var(--bg-light)",
+                    border: "1px solid var(--border-muted)",
+                    boxShadow:
+                      "0 1px 2px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.03)",
+                  }}
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <div
+                      className="p-2 rounded-lg"
+                      style={{ background: "var(--primary-20)" }}
+                    >
+                      <Users
+                        className="w-5 h-5"
+                        style={{ color: "var(--primary)" }}
+                      />
+                    </div>
+                    <div>
+                      <p
+                        className="text-2xl font-bold"
+                        style={{ color: "var(--text)" }}
+                      >
+                        {stats.total_users}
+                      </p>
+                      <p
+                        className="text-sm"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Total Users
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    className="mt-3 pt-3 border-t"
+                    style={{ borderColor: "var(--border-muted)" }}
+                  >
+                    <div
+                      className="flex justify-between text-sm"
+                      style={{ color: "var(--text-muted)" }}
+                    >
+                      <span>Students: {stats.total_students}</span>
+                      <span>PSG: {stats.total_psg_members}</span>
+                      <span>Admins: {stats.total_admins}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  className="p-6 rounded-lg"
+                  style={{
+                    background: "var(--bg-light)",
+                    border: "1px solid var(--border-muted)",
+                    boxShadow:
+                      "0 1px 2px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.03)",
+                  }}
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <div
+                      className="p-2 rounded-lg"
+                      style={{ background: "var(--success-20)" }}
+                    >
+                      <Calendar
+                        className="w-5 h-5"
+                        style={{ color: "var(--success)" }}
+                      />
+                    </div>
+                    <div>
+                      <p
+                        className="text-2xl font-bold"
+                        style={{ color: "var(--text)" }}
+                      >
+                        {stats.total_appointments}
+                      </p>
+                      <p
+                        className="text-sm"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Total Appointments
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    className="mt-3 pt-3 border-t"
+                    style={{ borderColor: "var(--border-muted)" }}
+                  >
+                    <p
+                      className="text-sm"
+                      style={{ color: "var(--text-muted)" }}
+                    >
+                      This Month: {stats.appointments_this_month}
+                    </p>
+                  </div>
+                </div>
+
+                <div
+                  className="p-6 rounded-lg"
+                  style={{
+                    background: "var(--bg-light)",
+                    border: "1px solid var(--border-muted)",
+                    boxShadow:
+                      "0 1px 2px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.03)",
+                  }}
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <div
+                      className="p-2 rounded-lg"
+                      style={{ background: "var(--warning-20)" }}
+                    >
+                      <ClipboardList
+                        className="w-5 h-5"
+                        style={{ color: "var(--warning)" }}
+                      />
+                    </div>
+                    <div>
+                      <p
+                        className="text-2xl font-bold"
+                        style={{ color: "var(--text)" }}
+                      >
+                        {stats.total_referrals}
+                      </p>
+                      <p
+                        className="text-sm"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Total Referrals
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    className="mt-3 pt-3 border-t"
+                    style={{ borderColor: "var(--border-muted)" }}
+                  >
+                    <p
+                      className="text-sm"
+                      style={{ color: "var(--text-muted)" }}
+                    >
+                      This Month: {stats.referrals_this_month}
+                    </p>
+                  </div>
+                </div>
+
+                <div
+                  className="p-6 rounded-lg"
+                  style={{
+                    background: "var(--bg-light)",
+                    border: "1px solid var(--border-muted)",
+                    boxShadow:
+                      "0 1px 2px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.03)",
+                  }}
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <div
+                      className="p-2 rounded-lg"
+                      style={{ background: "var(--info-20)" }}
+                    >
+                      <FileText
+                        className="w-5 h-5"
+                        style={{ color: "var(--info)" }}
+                      />
+                    </div>
+                    <div>
+                      <p
+                        className="text-2xl font-bold"
+                        style={{ color: "var(--text)" }}
+                      >
+                        {stats.total_sessions}
+                      </p>
+                      <p
+                        className="text-sm"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Total Sessions
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    className="mt-3 pt-3 border-t"
+                    style={{ borderColor: "var(--border-muted)" }}
+                  >
+                    <p
+                      className="text-sm"
+                      style={{ color: "var(--text-muted)" }}
+                    >
+                      This Month: {stats.sessions_this_month}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div>
             <h2
               className="text-base font-bold mb-6"
               style={{ color: "var(--text)" }}
             >
-              Quick Access
-            </h2>
-
+              {user.role === "admin"
+                ? "Administrative Functions"
+                : "Quick Access"}
+            </h2>{" "}
             {/* Student Dashboard */}
             {user.role === "student" && (
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -252,7 +459,6 @@ export default async function DashboardPage() {
                 </Link>
               </div>
             )}
-
             {/* PSG Member Dashboard */}
             {user.role === "psg_member" && (
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -492,7 +698,6 @@ export default async function DashboardPage() {
                 </Link>
               </div>
             )}
-
             {/* Admin Dashboard */}
             {user.role === "admin" && (
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

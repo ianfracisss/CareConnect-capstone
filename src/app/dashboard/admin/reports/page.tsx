@@ -186,12 +186,12 @@ export default function ReportsPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back Button */}
         <Link
-          href="/dashboard/admin"
+          href="/dashboard"
           className="inline-flex items-center gap-2 mb-6 transition-colors"
           style={{ color: "var(--primary)" }}
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to Admin Dashboard
+          Back to Dashboard
         </Link>
 
         {/* Header */}
