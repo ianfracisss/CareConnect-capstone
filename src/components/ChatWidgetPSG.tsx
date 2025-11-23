@@ -263,6 +263,27 @@ export function ChatWidgetPSG() {
     });
   };
 
+  const formatMessageTime = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const messageDate = new Date(date);
+    messageDate.setHours(0, 0, 0, 0);
+
+    // Check if message is from today
+    if (messageDate.getTime() === today.getTime()) {
+      return formatTime(dateStr);
+    } else {
+      // Show date and time for older messages
+      return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
+  };
+
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
     const today = new Date();
@@ -605,7 +626,7 @@ export function ChatWidgetPSG() {
                               className="text-xs mt-1"
                               style={{ color: "var(--text-muted)" }}
                             >
-                              {formatTime(message.created_at)}
+                              {formatMessageTime(message.created_at)}
                             </p>
                           </div>
                         </div>
