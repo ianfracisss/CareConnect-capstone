@@ -215,6 +215,48 @@ export async function sendMessage(
   }
 }
 
+// Send a system message (for assessment questions, not encrypted)
+export async function sendSystemMessage(
+  conversationId: string,
+  content: string
+): Promise<ActionResponse<Message>> {
+  try {
+    const supabase = await createClient();
+
+    if (!content.trim()) {
+      return { success: false, error: "Message cannot be empty" };
+    }
+
+    console.log("Sending system message:", {
+      conversationId,
+      content: content.substring(0, 50) + "...",
+    });
+
+    const { data: message, error } = await supabase
+      .from("messages")
+      .insert({
+        conversation_id: conversationId,
+        sender_id: null, // NULL for system messages
+        content: content.trim(), // System messages are not encrypted
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error sending system message:", error);
+      return {
+        success: false,
+        error: `Failed to send system message: ${error.message}`,
+      };
+    }
+
+    return { success: true, data: message };
+  } catch (error) {
+    console.error("Unexpected error:", error);
+    return { success: false, error: "An unexpected error occurred" };
+  }
+}
+
 // Mark messages as read
 export async function markMessagesAsRead(
   conversationId: string

@@ -8,6 +8,7 @@ import {
   getOrCreateConversation,
   getMessages,
   sendMessage,
+  sendSystemMessage,
   markMessagesAsRead,
   getUnreadCount,
 } from "@/actions/messages";
@@ -35,6 +36,7 @@ export function ChatWidget({ disabled = false }: ChatWidgetProps) {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const assessmentStartedRef = useRef(false);
+  const sentQuestionsRef = useRef<Set<number>>(new Set());
   const { showAlert } = useAlert();
 
   // Assessment flow state
@@ -142,54 +144,47 @@ export function ChatWidget({ disabled = false }: ChatWidgetProps) {
     return () => clearInterval(interval);
   }, []);
 
-  const sendNextQuestion = useCallback(async () => {
-    if (
-      !conversationId ||
-      currentQuestionIndex >= CASE_ASSESSMENT_QUESTIONS.length
-    ) {
-      // Will handle completion separately
-      console.log("sendNextQuestion called but conditions not met:", {
-        conversationId,
-        currentQuestionIndex,
-        totalQuestions: CASE_ASSESSMENT_QUESTIONS.length,
-      });
-      return;
-    }
+  const sendNextQuestion = useCallback(
+    async (questionIndex?: number) => {
+      const indexToUse = questionIndex ?? currentQuestionIndex;
 
-    const question = CASE_ASSESSMENT_QUESTIONS[currentQuestionIndex];
-    const questionId = `system-q-${currentQuestionIndex}`;
+      if (!conversationId || indexToUse >= CASE_ASSESSMENT_QUESTIONS.length) {
+        // Will handle completion separately
+        console.log("sendNextQuestion called but conditions not met:", {
+          conversationId,
+          currentQuestionIndex: indexToUse,
+          totalQuestions: CASE_ASSESSMENT_QUESTIONS.length,
+        });
+        return;
+      }
 
-    console.log(
-      `Sending question ${currentQuestionIndex + 1}:`,
-      question.question
-    );
+      const question = CASE_ASSESSMENT_QUESTIONS[indexToUse];
 
-    // Check if this question was already sent
-    const alreadySent = messages.some((msg) => msg.id === questionId);
-    if (alreadySent) {
-      console.log("Question already sent, skipping...");
-      return;
-    }
+      console.log(`Sending question ${indexToUse + 1}:`, question.question);
 
-    // Add question as a system message (displayed on left side)
-    const systemMessage: MessageWithSender = {
-      id: questionId,
-      conversation_id: conversationId,
-      sender_id: "system",
-      content: question.question,
-      read_at: null,
-      created_at: new Date().toISOString(),
-      sender: {
-        id: "system",
-        full_name: "PSG Support",
-        role: "psg_member",
-        avatar_url: undefined,
-      },
-    };
+      // Check if this question index was already sent using ref
+      if (sentQuestionsRef.current.has(indexToUse)) {
+        console.log(`Question ${indexToUse} already sent, skipping...`);
+        return;
+      }
 
-    setMessages((prev) => [...prev, systemMessage]);
-    setWaitingForAnswer(true);
-  }, [conversationId, currentQuestionIndex, messages]);
+      // Mark this question as sent
+      sentQuestionsRef.current.add(indexToUse);
+
+      // Send question as system message to database so PSG members can see it
+      const result = await sendSystemMessage(conversationId, question.question);
+
+      if (!result.success) {
+        console.error("Failed to send question:", result.error);
+        // Remove from sent set if failed
+        sentQuestionsRef.current.delete(indexToUse);
+        return;
+      }
+
+      setWaitingForAnswer(true);
+    },
+    [conversationId, currentQuestionIndex]
+  );
 
   const completeAssessment = useCallback(async () => {
     if (!conversationId) return;
@@ -197,6 +192,7 @@ export function ChatWidget({ disabled = false }: ChatWidgetProps) {
     setWaitingForAnswer(false);
     setIsAssessmentActive(false);
     assessmentStartedRef.current = false; // Reset for future assessments
+    sentQuestionsRef.current.clear(); // Clear sent questions tracking
 
     // Submit assessment
     const result = await submitCaseAssessment(
@@ -209,22 +205,7 @@ export function ChatWidget({ disabled = false }: ChatWidgetProps) {
         ? "Thank you for completing the assessment. Based on your responses, we recommend immediate support. A PSG member will reach out to you shortly. If you're in crisis, please contact emergency services (911) or the National Mental Health Crisis Hotline (1553)."
         : "Thank you for completing the assessment. A PSG member will review your responses and reach out to you soon. You can continue to message us here if you need support.";
 
-      const completionMessage: MessageWithSender = {
-        id: `system-complete-${Date.now()}`,
-        conversation_id: conversationId,
-        sender_id: "system",
-        content: completionMsg,
-        read_at: null,
-        created_at: new Date().toISOString(),
-        sender: {
-          id: "system",
-          full_name: "PSG Support",
-          role: "psg_member",
-          avatar_url: undefined,
-        },
-      };
-
-      setMessages((prev) => [...prev, completionMessage]);
+      await sendSystemMessage(conversationId, completionMsg);
 
       showAlert({
         type: "success",
@@ -250,21 +231,10 @@ export function ChatWidget({ disabled = false }: ChatWidgetProps) {
 
       // Validate yes/no answer
       if (!["yes", "no"].includes(normalizedAnswer)) {
-        const validationMessage: MessageWithSender = {
-          id: `system-validation-${Date.now()}`,
-          conversation_id: conversationId,
-          sender_id: "system",
-          content: "Please answer with 'yes' or 'no'.",
-          read_at: null,
-          created_at: new Date().toISOString(),
-          sender: {
-            id: "system",
-            full_name: "PSG Support",
-            role: "psg_member",
-            avatar_url: undefined,
-          },
-        };
-        setMessages((prev) => [...prev, validationMessage]);
+        await sendSystemMessage(
+          conversationId,
+          "Please answer with 'yes' or 'no'."
+        );
         return;
       } // Store response
       const response: AssessmentResponse = {
@@ -287,7 +257,7 @@ export function ChatWidget({ disabled = false }: ChatWidgetProps) {
         );
         if (skipToIndex !== -1) {
           setCurrentQuestionIndex(skipToIndex);
-          setTimeout(() => sendNextQuestion(), 1000);
+          setTimeout(() => sendNextQuestion(skipToIndex), 1000);
           return;
         }
       }
@@ -296,10 +266,10 @@ export function ChatWidget({ disabled = false }: ChatWidgetProps) {
       const nextIndex = currentQuestionIndex + 1;
       setCurrentQuestionIndex(nextIndex);
 
-      // Send next question after brief delay
+      // Send next question after brief delay, passing the next index directly
       setTimeout(() => {
         if (nextIndex < CASE_ASSESSMENT_QUESTIONS.length) {
-          sendNextQuestion();
+          sendNextQuestion(nextIndex);
         } else {
           completeAssessment();
         }
@@ -327,30 +297,15 @@ export function ChatWidget({ disabled = false }: ChatWidgetProps) {
     setIsAssessmentActive(true);
     setCurrentQuestionIndex(0);
     setAssessmentResponses([]);
+    sentQuestionsRef.current.clear(); // Clear tracking for new assessment
 
     // Send welcome message as system message
     const welcomeMsg =
       "Thank you for starting the case assessment. I'll ask you a few questions to better understand how we can support you. Please answer honestly - your responses are confidential.\n\nYou can answer with 'yes' or 'no' to each question.";
 
     console.log("Sending welcome message...");
-
-    const welcomeMessage: MessageWithSender = {
-      id: `system-welcome-${Date.now()}`,
-      conversation_id: conversationId,
-      sender_id: "system",
-      content: welcomeMsg,
-      read_at: null,
-      created_at: new Date().toISOString(),
-      sender: {
-        id: "system",
-        full_name: "PSG Support",
-        role: "psg_member",
-        avatar_url: undefined,
-      },
-    };
-
-    setMessages((prev) => [...prev, welcomeMessage]);
-    console.log("Welcome message added to UI");
+    await sendSystemMessage(conversationId, welcomeMsg);
+    console.log("Welcome message sent");
 
     // Send first question after a brief delay
     setTimeout(() => {
@@ -681,7 +636,7 @@ export function ChatWidget({ disabled = false }: ChatWidgetProps) {
                             }}
                           >
                             <p className="text-sm whitespace-pre-wrap break-words">
-                              {message.sender_id === "system"
+                              {message.sender_id === null
                                 ? message.content
                                 : conversationId
                                 ? decryptMessage(

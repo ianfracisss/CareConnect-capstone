@@ -1,14 +1,14 @@
 export interface Message {
   id: string;
   conversation_id: string;
-  sender_id: string;
+  sender_id: string | null; // null for system messages
   content: string;
   read_at: string | null;
   created_at: string;
 }
 
 export interface MessageWithSender extends Message {
-  sender: {
+  sender?: {
     id: string;
     full_name: string;
     role: string;

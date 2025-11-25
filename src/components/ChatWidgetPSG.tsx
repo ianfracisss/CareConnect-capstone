@@ -630,7 +630,9 @@ export function ChatWidgetPSG() {
                               }}
                             >
                               <p className="text-sm whitespace-pre-wrap break-words">
-                                {selectedConversation
+                                {message.sender_id === null
+                                  ? message.content
+                                  : selectedConversation
                                   ? decryptMessage(
                                       message.content,
                                       selectedConversation.id
