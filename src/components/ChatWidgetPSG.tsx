@@ -569,8 +569,9 @@ export function ChatWidgetPSG() {
                     </div>
                   ) : (
                     messages.map((message) => {
-                      // Check if sender is PSG member or admin (all team messages go to right side)
+                      // Check if sender is PSG member, admin, or system (all team messages go to right side)
                       const isTeamMessage =
+                        message.sender_id === null || // System messages
                         message.sender?.role === "psg_member" ||
                         message.sender?.role === "admin";
                       return (
