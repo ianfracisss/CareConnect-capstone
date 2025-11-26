@@ -334,3 +334,32 @@ export async function getUnreadCount(): Promise<ActionResponse<number>> {
     return { success: false, error: "An unexpected error occurred" };
   }
 }
+
+// Check if student has an existing conversation
+export async function hasExistingConversation(): Promise<
+  ActionResponse<boolean>
+> {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return { success: false, error: "Authentication required" };
+    }
+
+    // Check if conversation exists
+    const { data: conversation } = await supabase
+      .from("conversations")
+      .select("id")
+      .eq("student_id", user.id)
+      .maybeSingle();
+
+    return { success: true, data: !!conversation };
+  } catch (error) {
+    console.error("Unexpected error:", error);
+    return { success: false, error: "An unexpected error occurred" };
+  }
+}
