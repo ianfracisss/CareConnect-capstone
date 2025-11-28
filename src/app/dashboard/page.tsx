@@ -304,15 +304,6 @@ export default async function DashboardPage() {
                       >
                         Take a confidential mental health assessment
                       </p>
-                      <span
-                        className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
-                        style={{
-                          background: "var(--primary-20)",
-                          color: "var(--primary)",
-                        }}
-                      >
-                        Available Now
-                      </span>
                     </div>
                   </div>
                 </Link>
@@ -351,15 +342,6 @@ export default async function DashboardPage() {
                       >
                         Check your screening results and recommendations
                       </p>
-                      <span
-                        className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
-                        style={{
-                          background: "var(--primary-20)",
-                          color: "var(--primary)",
-                        }}
-                      >
-                        Available Now
-                      </span>
                     </div>
                   </div>
                 </Link>
@@ -398,15 +380,6 @@ export default async function DashboardPage() {
                       >
                         Schedule sessions with PSG members
                       </p>
-                      <span
-                        className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
-                        style={{
-                          background: "var(--primary-20)",
-                          color: "var(--primary)",
-                        }}
-                      >
-                        Available Now
-                      </span>
                     </div>
                   </div>
                 </Link>
@@ -445,15 +418,6 @@ export default async function DashboardPage() {
                       >
                         Submit a referral request for support
                       </p>
-                      <span
-                        className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
-                        style={{
-                          background: "var(--primary-20)",
-                          color: "var(--primary)",
-                        }}
-                      >
-                        Available Now
-                      </span>
                     </div>
                   </div>
                 </Link>
@@ -496,15 +460,6 @@ export default async function DashboardPage() {
                       >
                         Review student mental health screenings
                       </p>
-                      <span
-                        className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
-                        style={{
-                          background: "var(--primary-20)",
-                          color: "var(--primary)",
-                        }}
-                      >
-                        Available Now
-                      </span>
                     </div>
                   </div>
                 </Link>
@@ -543,15 +498,6 @@ export default async function DashboardPage() {
                       >
                         View and confirm scheduled sessions
                       </p>
-                      <span
-                        className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
-                        style={{
-                          background: "var(--primary-20)",
-                          color: "var(--primary)",
-                        }}
-                      >
-                        Available Now
-                      </span>
                     </div>
                   </div>
                 </Link>
@@ -590,15 +536,6 @@ export default async function DashboardPage() {
                       >
                         Set your weekly schedule
                       </p>
-                      <span
-                        className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
-                        style={{
-                          background: "var(--primary-20)",
-                          color: "var(--primary)",
-                        }}
-                      >
-                        Available Now
-                      </span>
                     </div>
                   </div>
                 </Link>
@@ -637,15 +574,6 @@ export default async function DashboardPage() {
                       >
                         Manage assigned student referrals
                       </p>
-                      <span
-                        className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
-                        style={{
-                          background: "var(--primary-20)",
-                          color: "var(--primary)",
-                        }}
-                      >
-                        Available Now
-                      </span>
                     </div>
                   </div>
                 </Link>
@@ -684,15 +612,6 @@ export default async function DashboardPage() {
                       >
                         Document and review session records
                       </p>
-                      <span
-                        className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
-                        style={{
-                          background: "var(--primary-20)",
-                          color: "var(--primary)",
-                        }}
-                      >
-                        Available Now
-                      </span>
                     </div>
                   </div>
                 </Link>
@@ -735,15 +654,6 @@ export default async function DashboardPage() {
                       >
                         Manage users, roles, and permissions
                       </p>
-                      <span
-                        className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
-                        style={{
-                          background: "var(--primary-20)",
-                          color: "var(--primary)",
-                        }}
-                      >
-                        Available Now
-                      </span>
                     </div>
                   </div>
                 </Link>
@@ -782,15 +692,6 @@ export default async function DashboardPage() {
                       >
                         View system analytics and reports
                       </p>
-                      <span
-                        className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
-                        style={{
-                          background: "var(--primary-20)",
-                          color: "var(--primary)",
-                        }}
-                      >
-                        Available Now
-                      </span>
                     </div>
                   </div>
                 </Link>
@@ -829,15 +730,6 @@ export default async function DashboardPage() {
                       >
                         Review system activity logs
                       </p>
-                      <span
-                        className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
-                        style={{
-                          background: "var(--primary-20)",
-                          color: "var(--primary)",
-                        }}
-                      >
-                        Available Now
-                      </span>
                     </div>
                   </div>
                 </Link>
@@ -876,15 +768,6 @@ export default async function DashboardPage() {
                       >
                         Review student mental health screenings
                       </p>
-                      <span
-                        className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
-                        style={{
-                          background: "var(--primary-20)",
-                          color: "var(--primary)",
-                        }}
-                      >
-                        Available Now
-                      </span>
                     </div>
                   </div>
                 </Link>
@@ -923,15 +806,6 @@ export default async function DashboardPage() {
                       >
                         View and manage all appointments
                       </p>
-                      <span
-                        className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
-                        style={{
-                          background: "var(--primary-20)",
-                          color: "var(--primary)",
-                        }}
-                      >
-                        Available Now
-                      </span>
                     </div>
                   </div>
                 </Link>
@@ -970,15 +844,6 @@ export default async function DashboardPage() {
                       >
                         View and manage all referrals
                       </p>
-                      <span
-                        className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
-                        style={{
-                          background: "var(--primary-20)",
-                          color: "var(--primary)",
-                        }}
-                      >
-                        Available Now
-                      </span>
                     </div>
                   </div>
                 </Link>
@@ -1017,15 +882,6 @@ export default async function DashboardPage() {
                       >
                         View all session documentation
                       </p>
-                      <span
-                        className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
-                        style={{
-                          background: "var(--primary-20)",
-                          color: "var(--primary)",
-                        }}
-                      >
-                        Available Now
-                      </span>
                     </div>
                   </div>
                 </Link>
@@ -1064,15 +920,6 @@ export default async function DashboardPage() {
                       >
                         Set your weekly schedule
                       </p>
-                      <span
-                        className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded"
-                        style={{
-                          background: "var(--primary-20)",
-                          color: "var(--primary)",
-                        }}
-                      >
-                        Available Now
-                      </span>
                     </div>
                   </div>
                 </Link>
