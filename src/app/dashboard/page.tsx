@@ -34,7 +34,7 @@ export default async function DashboardPage() {
 
         {/* Main Content */}
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="mb-6">
+          <div className="mb-10">
             <div
               className="rounded-lg p-4"
               style={{
@@ -54,6 +54,253 @@ export default async function DashboardPage() {
               )}
             </div>
           </div>
+
+          {/* Welcome Banner for Students */}
+          {user.role === "student" && (
+            <div className="mb-8 w-full">
+              <div
+                className="rounded-lg w-full"
+                style={{
+                  background:
+                    "linear-gradient(135deg, var(--primary-20) 0%, var(--primary-10) 100%)",
+                  border: "1px solid var(--primary-30)",
+                }}
+              >
+                <h2
+                  className="text-2xl md:text-3xl font-bold mb-3"
+                  style={{ color: "var(--primary)" }}
+                >
+                  Your Mental Health Matters 💚
+                </h2>
+                <p
+                  className="text-base md:text-lg mb-4 leading-relaxed"
+                  style={{ color: "var(--text)" }}
+                >
+                  Taking care of your mental health is just as important as your
+                  physical health. We&apos;re here to support you every step of
+                  the way through confidential screenings, peer support
+                  sessions, and professional guidance.
+                </p>
+                <div className="grid md:grid-cols-3 gap-4 mt-6">
+                  <div className="flex items-start gap-3">
+                    <div className="text-2xl">🔒</div>
+                    <div>
+                      <p
+                        className="font-semibold text-sm"
+                        style={{ color: "var(--text)" }}
+                      >
+                        100% Confidential
+                      </p>
+                      <p
+                        className="text-xs"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Your privacy is our priority
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="text-2xl">🤝</div>
+                    <div>
+                      <p
+                        className="font-semibold text-sm"
+                        style={{ color: "var(--text)" }}
+                      >
+                        Peer Support
+                      </p>
+                      <p
+                        className="text-xs"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Connect with trained PSG members
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="text-2xl">⚡</div>
+                    <div>
+                      <p
+                        className="font-semibold text-sm"
+                        style={{ color: "var(--text)" }}
+                      >
+                        Quick & Easy
+                      </p>
+                      <p
+                        className="text-xs"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Book appointments in seconds
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Welcome Banner for Admin */}
+          {user.role === "admin" && (
+            <div className="mb-8 w-full">
+              <div
+                className="rounded-lg  w-full"
+                style={{
+                  background:
+                    "linear-gradient(135deg, var(--primary-20) 0%, var(--primary-10) 100%)",
+                  border: "1px solid var(--primary-30)",
+                }}
+              >
+                <h2
+                  className="text-2xl md:text-3xl font-bold mb-3"
+                  style={{ color: "var(--primary)" }}
+                >
+                  Admin Dashboard 🛡️
+                </h2>
+                <p
+                  className="text-base md:text-lg mb-4 leading-relaxed"
+                  style={{ color: "var(--text)" }}
+                >
+                  Manage the CareConnect system, monitor user activity, and
+                  ensure the mental health support system runs smoothly for all
+                  students and PSG members.
+                </p>
+                <div className="grid md:grid-cols-3 gap-4 mt-6">
+                  <div className="flex items-start gap-3">
+                    <div className="text-2xl">👥</div>
+                    <div>
+                      <p
+                        className="font-semibold text-sm"
+                        style={{ color: "var(--text)" }}
+                      >
+                        User Management
+                      </p>
+                      <p
+                        className="text-xs"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Control access and permissions
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="text-2xl">📊</div>
+                    <div>
+                      <p
+                        className="font-semibold text-sm"
+                        style={{ color: "var(--text)" }}
+                      >
+                        System Analytics
+                      </p>
+                      <p
+                        className="text-xs"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Track trends and insights
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="text-2xl">🔍</div>
+                    <div>
+                      <p
+                        className="font-semibold text-sm"
+                        style={{ color: "var(--text)" }}
+                      >
+                        Audit & Security
+                      </p>
+                      <p
+                        className="text-xs"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Monitor all system activities
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Welcome Banner for PSG Members */}
+          {user.role === "psg_member" && (
+            <div className="mb-8 w-full">
+              <div
+                className="rounded-lg  w-full"
+                style={{
+                  background:
+                    "linear-gradient(135deg, var(--primary-20) 0%, var(--primary-10) 100%)",
+                  border: "1px solid var(--primary-30)",
+                }}
+              >
+                <h2
+                  className="text-2xl md:text-3xl font-bold mb-3"
+                  style={{ color: "var(--primary)" }}
+                >
+                  Welcome, PSG Member 🤝
+                </h2>
+                <p
+                  className="text-base md:text-lg mb-4 leading-relaxed"
+                  style={{ color: "var(--text)" }}
+                >
+                  Thank you for being part of the Peer Support Group. Your role
+                  is vital in providing mental health support to fellow students
+                  through active listening, guidance, and compassionate care.
+                </p>
+                <div className="grid md:grid-cols-3 gap-4 mt-6">
+                  <div className="flex items-start gap-3">
+                    <div className="text-2xl">📋</div>
+                    <div>
+                      <p
+                        className="font-semibold text-sm"
+                        style={{ color: "var(--text)" }}
+                      >
+                        Manage Sessions
+                      </p>
+                      <p
+                        className="text-xs"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Schedule and document meetings
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="text-2xl">📅</div>
+                    <div>
+                      <p
+                        className="font-semibold text-sm"
+                        style={{ color: "var(--text)" }}
+                      >
+                        Set Availability
+                      </p>
+                      <p
+                        className="text-xs"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Control your weekly schedule
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="text-2xl">💼</div>
+                    <div>
+                      <p
+                        className="font-semibold text-sm"
+                        style={{ color: "var(--text)" }}
+                      >
+                        Review Cases
+                      </p>
+                      <p
+                        className="text-xs"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Handle screenings and referrals
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* System Overview - Admin Only */}
           {user.role === "admin" && stats && (
@@ -265,8 +512,56 @@ export default async function DashboardPage() {
             >
               {user.role === "admin"
                 ? "Administrative Functions"
+                : user.role === "student"
+                ? "Get Started - Choose What You Need"
                 : "Quick Access"}
-            </h2>{" "}
+            </h2>
+            {/* Student Info Section */}
+            {user.role === "student" && (
+              <div className="mb-6">
+                <p
+                  className="text-sm leading-relaxed"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  Not sure where to begin? Start with a{" "}
+                  <strong>Mental Health Screening</strong> to get personalized
+                  recommendations, or jump straight to{" "}
+                  <strong>My Appointments</strong> to schedule a session with a
+                  PSG member. Need immediate support? Use the{" "}
+                  <strong>Self-Referral Form</strong>.
+                </p>
+              </div>
+            )}
+            {/* Admin Info Section */}
+            {user.role === "admin" && (
+              <div className="mb-6">
+                <p
+                  className="text-sm leading-relaxed"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  Monitor system health, manage user accounts, and access
+                  comprehensive reports. Use <strong>User Management</strong> to
+                  control access, <strong>Reports & Analytics</strong> for
+                  insights, and <strong>Audit Logs</strong> to track system
+                  activities.
+                </p>
+              </div>
+            )}
+            {/* PSG Info Section */}
+            {user.role === "psg_member" && (
+              <div className="mb-6">
+                <p
+                  className="text-sm leading-relaxed"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  Start by reviewing <strong>My Appointments</strong> to see
+                  upcoming sessions, or update your{" "}
+                  <strong>Availability</strong> to let students know when
+                  you&apos;re free. Don&apos;t forget to document completed
+                  sessions for proper record-keeping.
+                </p>
+              </div>
+            )}{" "}
             {/* Student Dashboard */}
             {user.role === "student" && (
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -299,10 +594,17 @@ export default async function DashboardPage() {
                         Mental Health Screening
                       </h3>
                       <p
-                        className="text-sm"
+                        className="text-sm mb-2"
                         style={{ color: "var(--text-muted)" }}
                       >
                         Take a confidential mental health assessment
+                      </p>
+                      <p
+                        className="text-xs italic"
+                        style={{ color: "var(--primary)" }}
+                      >
+                        ✨ Takes only 5 minutes • Get instant color-coded
+                        results
                       </p>
                     </div>
                   </div>
@@ -337,10 +639,16 @@ export default async function DashboardPage() {
                         View Results
                       </h3>
                       <p
-                        className="text-sm"
+                        className="text-sm mb-2"
                         style={{ color: "var(--text-muted)" }}
                       >
                         Check your screening results and recommendations
+                      </p>
+                      <p
+                        className="text-xs italic"
+                        style={{ color: "var(--primary)" }}
+                      >
+                        📊 Track your progress • See personalized suggestions
                       </p>
                     </div>
                   </div>
@@ -375,10 +683,16 @@ export default async function DashboardPage() {
                         My Appointments
                       </h3>
                       <p
-                        className="text-sm"
+                        className="text-sm mb-2"
                         style={{ color: "var(--text-muted)" }}
                       >
                         Schedule sessions with PSG members
+                      </p>
+                      <p
+                        className="text-xs italic"
+                        style={{ color: "var(--primary)" }}
+                      >
+                        📅 Real-time availability • Book in under 5 seconds
                       </p>
                     </div>
                   </div>
@@ -413,14 +727,141 @@ export default async function DashboardPage() {
                         Self-Referral Form
                       </h3>
                       <p
-                        className="text-sm"
+                        className="text-sm mb-2"
                         style={{ color: "var(--text-muted)" }}
                       >
                         Submit a referral request for support
                       </p>
+                      <p
+                        className="text-xs italic"
+                        style={{ color: "var(--primary)" }}
+                      >
+                        🆘 Need help now? • Connect with OCCS professionals
+                      </p>
                     </div>
                   </div>
                 </Link>
+              </div>
+            )}
+            {/* Mental Health Tips Section - Students Only */}
+            {user.role === "student" && (
+              <div className="mt-10">
+                <h2
+                  className="text-lg font-bold mb-4"
+                  style={{ color: "var(--text)" }}
+                >
+                  💡 Quick Mental Health Tips
+                </h2>
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                  <div
+                    className="p-4 rounded-lg"
+                    style={{
+                      background: "var(--bg-light)",
+                      border: "1px solid var(--border-muted)",
+                    }}
+                  >
+                    <div className="text-3xl mb-2">🧘</div>
+                    <h3
+                      className="font-semibold text-sm mb-1"
+                      style={{ color: "var(--text)" }}
+                    >
+                      Practice Mindfulness
+                    </h3>
+                    <p
+                      className="text-xs"
+                      style={{ color: "var(--text-muted)" }}
+                    >
+                      Take 5 minutes daily for deep breathing or meditation
+                    </p>
+                  </div>
+                  <div
+                    className="p-4 rounded-lg"
+                    style={{
+                      background: "var(--bg-light)",
+                      border: "1px solid var(--border-muted)",
+                    }}
+                  >
+                    <div className="text-3xl mb-2">🏃</div>
+                    <h3
+                      className="font-semibold text-sm mb-1"
+                      style={{ color: "var(--text)" }}
+                    >
+                      Stay Active
+                    </h3>
+                    <p
+                      className="text-xs"
+                      style={{ color: "var(--text-muted)" }}
+                    >
+                      Regular exercise boosts mood and reduces stress
+                    </p>
+                  </div>
+                  <div
+                    className="p-4 rounded-lg"
+                    style={{
+                      background: "var(--bg-light)",
+                      border: "1px solid var(--border-muted)",
+                    }}
+                  >
+                    <div className="text-3xl mb-2">💬</div>
+                    <h3
+                      className="font-semibold text-sm mb-1"
+                      style={{ color: "var(--text)" }}
+                    >
+                      Talk It Out
+                    </h3>
+                    <p
+                      className="text-xs"
+                      style={{ color: "var(--text-muted)" }}
+                    >
+                      Share your feelings with trusted friends or counselors
+                    </p>
+                  </div>
+                  <div
+                    className="p-4 rounded-lg"
+                    style={{
+                      background: "var(--bg-light)",
+                      border: "1px solid var(--border-muted)",
+                    }}
+                  >
+                    <div className="text-3xl mb-2">😴</div>
+                    <h3
+                      className="font-semibold text-sm mb-1"
+                      style={{ color: "var(--text)" }}
+                    >
+                      Prioritize Sleep
+                    </h3>
+                    <p
+                      className="text-xs"
+                      style={{ color: "var(--text-muted)" }}
+                    >
+                      Aim for 7-9 hours of quality sleep each night
+                    </p>
+                  </div>
+                </div>
+
+                {/* Important Note */}
+                <div
+                  className="mt-6 p-4 rounded-lg"
+                  style={{
+                    background: "var(--warning-10)",
+                    border: "1px solid var(--warning-30)",
+                  }}
+                >
+                  <p
+                    className="text-sm flex items-start gap-2"
+                    style={{ color: "var(--text)" }}
+                  >
+                    <span className="text-lg">⚠️</span>
+                    <span>
+                      <strong>Remember:</strong> If you&apos;re experiencing a
+                      mental health emergency or having thoughts of self-harm,
+                      please contact the National Mental Health Crisis Hotline
+                      at <strong>1553</strong> or visit the OCCS office
+                      immediately. You&apos;re not alone, and help is available
+                      24/7.
+                    </span>
+                  </p>
+                </div>
               </div>
             )}
             {/* PSG Member Dashboard */}
