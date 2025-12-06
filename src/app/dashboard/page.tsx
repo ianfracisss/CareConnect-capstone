@@ -138,6 +138,170 @@ export default async function DashboardPage() {
             </div>
           )}
 
+          {/* Welcome Banner for Admin */}
+          {user.role === "admin" && (
+            <div className="mb-8 w-full">
+              <div
+                className="rounded-lg  w-full"
+                style={{
+                  background:
+                    "linear-gradient(135deg, var(--primary-20) 0%, var(--primary-10) 100%)",
+                  border: "1px solid var(--primary-30)",
+                }}
+              >
+                <h2
+                  className="text-2xl md:text-3xl font-bold mb-3"
+                  style={{ color: "var(--primary)" }}
+                >
+                  Admin Dashboard 🛡️
+                </h2>
+                <p
+                  className="text-base md:text-lg mb-4 leading-relaxed"
+                  style={{ color: "var(--text)" }}
+                >
+                  Manage the CareConnect system, monitor user activity, and
+                  ensure the mental health support system runs smoothly for all
+                  students and PSG members.
+                </p>
+                <div className="grid md:grid-cols-3 gap-4 mt-6">
+                  <div className="flex items-start gap-3">
+                    <div className="text-2xl">👥</div>
+                    <div>
+                      <p
+                        className="font-semibold text-sm"
+                        style={{ color: "var(--text)" }}
+                      >
+                        User Management
+                      </p>
+                      <p
+                        className="text-xs"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Control access and permissions
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="text-2xl">📊</div>
+                    <div>
+                      <p
+                        className="font-semibold text-sm"
+                        style={{ color: "var(--text)" }}
+                      >
+                        System Analytics
+                      </p>
+                      <p
+                        className="text-xs"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Track trends and insights
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="text-2xl">🔍</div>
+                    <div>
+                      <p
+                        className="font-semibold text-sm"
+                        style={{ color: "var(--text)" }}
+                      >
+                        Audit & Security
+                      </p>
+                      <p
+                        className="text-xs"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Monitor all system activities
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Welcome Banner for PSG Members */}
+          {user.role === "psg_member" && (
+            <div className="mb-8 w-full">
+              <div
+                className="rounded-lg p-6 md:p-8 w-full"
+                style={{
+                  background:
+                    "linear-gradient(135deg, var(--primary-20) 0%, var(--primary-10) 100%)",
+                  border: "1px solid var(--primary-30)",
+                }}
+              >
+                <h2
+                  className="text-2xl md:text-3xl font-bold mb-3"
+                  style={{ color: "var(--primary)" }}
+                >
+                  Welcome, PSG Member 🤝
+                </h2>
+                <p
+                  className="text-base md:text-lg mb-4 leading-relaxed"
+                  style={{ color: "var(--text)" }}
+                >
+                  Thank you for being part of the Peer Support Group. Your role
+                  is vital in providing mental health support to fellow students
+                  through active listening, guidance, and compassionate care.
+                </p>
+                <div className="grid md:grid-cols-3 gap-4 mt-6">
+                  <div className="flex items-start gap-3">
+                    <div className="text-2xl">📋</div>
+                    <div>
+                      <p
+                        className="font-semibold text-sm"
+                        style={{ color: "var(--text)" }}
+                      >
+                        Manage Sessions
+                      </p>
+                      <p
+                        className="text-xs"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Schedule and document meetings
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="text-2xl">📅</div>
+                    <div>
+                      <p
+                        className="font-semibold text-sm"
+                        style={{ color: "var(--text)" }}
+                      >
+                        Set Availability
+                      </p>
+                      <p
+                        className="text-xs"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Control your weekly schedule
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="text-2xl">💼</div>
+                    <div>
+                      <p
+                        className="font-semibold text-sm"
+                        style={{ color: "var(--text)" }}
+                      >
+                        Review Cases
+                      </p>
+                      <p
+                        className="text-xs"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Handle screenings and referrals
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* System Overview - Admin Only */}
           {user.role === "admin" && stats && (
             <div className="mb-8">
@@ -365,6 +529,36 @@ export default async function DashboardPage() {
                   <strong>My Appointments</strong> to schedule a session with a
                   PSG member. Need immediate support? Use the{" "}
                   <strong>Self-Referral Form</strong>.
+                </p>
+              </div>
+            )}
+            {/* Admin Info Section */}
+            {user.role === "admin" && (
+              <div className="mb-6">
+                <p
+                  className="text-sm leading-relaxed"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  Monitor system health, manage user accounts, and access
+                  comprehensive reports. Use <strong>User Management</strong> to
+                  control access, <strong>Reports & Analytics</strong> for
+                  insights, and <strong>Audit Logs</strong> to track system
+                  activities.
+                </p>
+              </div>
+            )}
+            {/* PSG Info Section */}
+            {user.role === "psg_member" && (
+              <div className="mb-6">
+                <p
+                  className="text-sm leading-relaxed"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  Start by reviewing <strong>My Appointments</strong> to see
+                  upcoming sessions, or update your{" "}
+                  <strong>Availability</strong> to let students know when
+                  you&apos;re free. Don&apos;t forget to document completed
+                  sessions for proper record-keeping.
                 </p>
               </div>
             )}{" "}
