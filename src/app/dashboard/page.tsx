@@ -77,9 +77,9 @@ export default async function DashboardPage() {
                   style={{ color: "var(--text)" }}
                 >
                   Taking care of your mental health is just as important as your
-                  physical health. We're here to support you every step of the
-                  way through confidential screenings, peer support sessions,
-                  and professional guidance.
+                  physical health. We&apos;re here to support you every step of
+                  the way through confidential screenings, peer support
+                  sessions, and professional guidance.
                 </p>
                 <div className="grid md:grid-cols-3 gap-4 mt-6">
                   <div className="flex items-start gap-3">
@@ -659,11 +659,12 @@ export default async function DashboardPage() {
                   >
                     <span className="text-lg">⚠️</span>
                     <span>
-                      <strong>Remember:</strong> If you're experiencing a mental
-                      health emergency or having thoughts of self-harm, please
-                      contact the National Mental Health Crisis Hotline at{" "}
-                      <strong>1553</strong> or visit the OCCS office
-                      immediately. You're not alone, and help is available 24/7.
+                      <strong>Remember:</strong> If you&apos;re experiencing a
+                      mental health emergency or having thoughts of self-harm,
+                      please contact the National Mental Health Crisis Hotline
+                      at <strong>1553</strong> or visit the OCCS office
+                      immediately. You&apos;re not alone, and help is available
+                      24/7.
                     </span>
                   </p>
                 </div>
