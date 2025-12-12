@@ -10,6 +10,7 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useEffect } from "react";
 import { useAlert } from "@/components/AlertProvider";
 import { useSearchParams } from "next/navigation";
+import { ThemeToggler } from "@/components/ThemeToggler";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -71,8 +72,11 @@ export default function LoginPage() {
     <div
       className="flex min-h-screen relative"
       style={{ background: "var(--bg)", transition: "background 0.3s" }}
-      data-theme="light"
     >
+      <div className="absolute top-4 right-4 z-50">
+        <ThemeToggler />
+      </div>
+
       {/* Left side - Branding */}
       <div
         className="hidden lg:flex lg:w-1/2 p-12 flex-col justify-between"
