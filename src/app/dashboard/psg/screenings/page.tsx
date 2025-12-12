@@ -305,7 +305,7 @@ export default function PSGScreeningsPage() {
 
               <div className="p-6">
                 {/* Filter Tabs */}
-                <div className="flex gap-2 mb-6">
+                <div className="flex flex-wrap gap-2 mb-6">
                   <button
                     onClick={() => setFilter("all")}
                     className="px-4 py-2 rounded-md text-sm font-medium transition"
@@ -375,8 +375,8 @@ export default function PSGScreeningsPage() {
                           borderColor: "var(--border-muted)",
                         }}
                       >
-                        <div className="flex items-center justify-between gap-4">
-                          <div className="flex-1 space-y-1">
+                        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                          <div className="flex-1 space-y-1 w-full">
                             <div className="flex items-center gap-2 flex-wrap">
                               <span
                                 className="font-medium"
@@ -429,7 +429,7 @@ export default function PSGScreeningsPage() {
                                 `/dashboard/psg/screenings/${screening.id}`
                               )
                             }
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition border shadow-[0_1px_2px_rgba(0,0,0,0.3),0_1px_2px_rgba(0,0,0,0.03),0_2px_4px_rgba(0,0,0,0.015)] hover:shadow-[0_2px_4px_rgba(0,0,0,0.4),0_2px_4px_rgba(0,0,0,0.06),0_4px_8px_rgba(0,0,0,0.03)]"
+                            className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition border shadow-[0_1px_2px_rgba(0,0,0,0.3),0_1px_2px_rgba(0,0,0,0.03),0_2px_4px_rgba(0,0,0,0.015)] hover:shadow-[0_2px_4px_rgba(0,0,0,0.4),0_2px_4px_rgba(0,0,0,0.06),0_4px_8px_rgba(0,0,0,0.03)] w-full sm:w-auto"
                             style={{
                               borderColor: "var(--border)",
                               color: "var(--text)",

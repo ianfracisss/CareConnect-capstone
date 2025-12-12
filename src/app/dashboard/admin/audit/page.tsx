@@ -122,16 +122,30 @@ export default function AuditLogsPage() {
         </Link>
 
         {/* Header */}
-        <div className="mb-6">
-          <h1
-            className="text-2xl font-bold mb-2"
-            style={{ color: "var(--text)" }}
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+          <div>
+            <h1
+              className="text-lg font-bold mb-2"
+              style={{ color: "var(--text)" }}
+            >
+              Audit Logs
+            </h1>
+            <p style={{ color: "var(--text-muted)" }}>
+              Track system activities and data changes
+            </p>
+          </div>
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg transition-colors"
+            style={{
+              background: "var(--bg-light)",
+              border: "1px solid var(--border-muted)",
+              color: "var(--text)",
+            }}
           >
-            Audit Logs
-          </h1>
-          <p style={{ color: "var(--text-muted)" }}>
-            Track all system activities and changes
-          </p>
+            <ArrowLeft className="w-4 h-4" />
+            Back to Dashboard
+          </Link>
         </div>
 
         {/* Filters */}
@@ -226,9 +240,9 @@ export default function AuditLogsPage() {
             </select>
           </div>
 
-          <div className="mt-3 flex items-center justify-between">
+          <div className="mt-3 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div
-              className="flex items-center gap-4 text-sm"
+              className="flex flex-wrap items-center gap-4 text-sm"
               style={{ color: "var(--text-muted)" }}
             >
               <span>Total: {filteredLogs.length}</span>

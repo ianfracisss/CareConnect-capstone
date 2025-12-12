@@ -282,7 +282,7 @@ export default function PSGReferralsPage() {
                   }}
                 >
                   {/* Header */}
-                  <div className="flex items-start justify-between mb-4">
+                  <div className="flex flex-col sm:flex-row items-start justify-between mb-4 gap-4">
                     <div className="flex items-center gap-3">
                       <div
                         className="p-2 rounded-lg"

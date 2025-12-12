@@ -204,7 +204,7 @@ export default function PSGAppointmentsPage() {
       />
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Header */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
           <div>
             <h1
               className="text-base font-bold mb-2"
@@ -221,7 +221,7 @@ export default function PSGAppointmentsPage() {
           </div>
           <Link
             href="/dashboard/psg/availability"
-            className="px-6 py-2 rounded-lg shadow-[0_1px_3px_rgba(0,0,0,0.2),0_1px_2px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_6px_rgba(0,0,0,0.25),0_2px_4px_rgba(0,0,0,0.08)] hover:opacity-90 transition-all"
+            className="px-6 py-2 rounded-lg shadow-[0_1px_3px_rgba(0,0,0,0.2),0_1px_2px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_6px_rgba(0,0,0,0.25),0_2px_4px_rgba(0,0,0,0.08)] hover:opacity-90 transition-all w-full sm:w-auto text-center"
             style={{ background: "var(--primary)", color: "var(--bg-dark)" }}
           >
             Manage Availability
@@ -230,7 +230,7 @@ export default function PSGAppointmentsPage() {
 
         {/* Filter Tabs */}
         <div
-          className="flex gap-4 mb-6 border-b pb-2"
+          className="flex flex-wrap gap-4 mb-6 border-b pb-2"
           style={{ borderColor: "var(--border-muted)" }}
         >
           {[
@@ -299,7 +299,7 @@ export default function PSGAppointmentsPage() {
                 }}
               >
                 {/* Header with Name and Status */}
-                <div className="flex items-start justify-between mb-4">
+                <div className="flex flex-col sm:flex-row items-start justify-between mb-4 gap-4">
                   <div className="flex items-center gap-3">
                     <div
                       className="p-2 rounded-lg"

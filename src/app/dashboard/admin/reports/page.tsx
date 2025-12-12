@@ -446,7 +446,7 @@ export default function ReportsPage() {
 
         {/* Tabs */}
         <div
-          className="flex gap-2 mb-6 p-1 rounded-lg"
+          className="flex flex-wrap gap-2 mb-6 p-1 rounded-lg"
           style={{
             background: "var(--bg-light)",
             border: "1px solid var(--border-muted)",

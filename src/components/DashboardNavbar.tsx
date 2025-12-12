@@ -35,7 +35,10 @@ export function DashboardNavbar({
               {title}
             </h1>
             {subtitle && (
-              <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+              <p
+                className="text-xs hidden sm:block"
+                style={{ color: "var(--text-muted)" }}
+              >
                 {subtitle}
               </p>
             )}
@@ -43,7 +46,7 @@ export function DashboardNavbar({
           {showHomeButton && (
             <>
               <div
-                className="h-6 w-px"
+                className="h-6 w-px hidden sm:block"
                 style={{ background: "var(--border-muted)" }}
               />
               <button
@@ -59,7 +62,9 @@ export function DashboardNavbar({
                 }}
               >
                 <Home className="h-5 w-5" />
-                <span className="text-sm font-medium">Home</span>
+                <span className="text-sm font-medium hidden sm:inline">
+                  Home
+                </span>
               </button>
             </>
           )}

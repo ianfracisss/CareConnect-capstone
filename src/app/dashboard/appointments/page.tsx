@@ -125,13 +125,13 @@ export default function StudentAppointmentsPage() {
         showHomeButton={true}
       />
       <div className="container mx-auto px-4 py-8 max-w-6xl">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
           <h1 className="text-lg font-bold" style={{ color: "var(--text)" }}>
             My Appointments
           </h1>
           <Link
             href="/dashboard/appointments/book"
-            className="px-6 py-2 rounded-lg hover:bg-opacity-90 transition-colors"
+            className="px-6 py-2 rounded-lg hover:bg-opacity-90 transition-colors w-full sm:w-auto text-center"
             style={{
               background: "var(--primary)",
               color: "var(--bg-dark)",
@@ -196,8 +196,8 @@ export default function StudentAppointmentsPage() {
                   border: "1px solid var(--border-muted)",
                 }}
               >
-                <div className="flex justify-between items-start mb-4">
-                  <div className="flex-1">
+                <div className="flex flex-col sm:flex-row justify-between items-start mb-4 gap-4">
+                  <div className="flex-1 w-full">
                     <div className="flex items-center gap-3 mb-2">
                       <h3
                         className="text-base font-bold"
