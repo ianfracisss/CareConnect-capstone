@@ -70,7 +70,7 @@ export default async function DashboardPage() {
                   className="text-2xl md:text-3xl font-bold mb-3"
                   style={{ color: "var(--primary)" }}
                 >
-                  Your Mental Health Matters 💚
+                  Your Mental Health Matters
                 </h2>
                 <p
                   className="text-base md:text-lg mb-4 leading-relaxed"
@@ -81,7 +81,6 @@ export default async function DashboardPage() {
                 </p>
                 <div className="grid md:grid-cols-3 gap-4 mt-6">
                   <div className="flex items-center gap-3">
-                    <div className="text-2xl">🔒</div>
                     <p
                       className="font-semibold text-sm"
                       style={{ color: "var(--text)" }}
@@ -90,7 +89,6 @@ export default async function DashboardPage() {
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="text-2xl">🤝</div>
                     <p
                       className="font-semibold text-sm"
                       style={{ color: "var(--text)" }}
@@ -99,7 +97,6 @@ export default async function DashboardPage() {
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="text-2xl">⚡</div>
                     <p
                       className="font-semibold text-sm"
                       style={{ color: "var(--text)" }}
@@ -127,7 +124,7 @@ export default async function DashboardPage() {
                   className="text-2xl md:text-3xl font-bold mb-3"
                   style={{ color: "var(--primary)" }}
                 >
-                  Admin Dashboard 🛡️
+                  Admin Dashboard
                 </h2>
                 <p
                   className="text-base md:text-lg mb-4 leading-relaxed"
@@ -139,7 +136,6 @@ export default async function DashboardPage() {
                 </p>
                 <div className="grid md:grid-cols-3 gap-4 mt-6">
                   <div className="flex items-start gap-3">
-                    <div className="text-2xl">👥</div>
                     <div>
                       <p
                         className="font-semibold text-sm"
@@ -156,7 +152,6 @@ export default async function DashboardPage() {
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <div className="text-2xl">📊</div>
                     <div>
                       <p
                         className="font-semibold text-sm"
@@ -173,7 +168,6 @@ export default async function DashboardPage() {
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <div className="text-2xl">🔍</div>
                     <div>
                       <p
                         className="font-semibold text-sm"
@@ -209,7 +203,7 @@ export default async function DashboardPage() {
                   className="text-2xl md:text-3xl font-bold mb-3"
                   style={{ color: "var(--primary)" }}
                 >
-                  Welcome, PSG Member 🤝
+                  Welcome, PSG Member
                 </h2>
                 <p
                   className="text-base md:text-lg mb-4 leading-relaxed"
@@ -221,7 +215,6 @@ export default async function DashboardPage() {
                 </p>
                 <div className="grid md:grid-cols-3 gap-4 mt-6">
                   <div className="flex items-start gap-3">
-                    <div className="text-2xl">📋</div>
                     <div>
                       <p
                         className="font-semibold text-sm"
@@ -238,7 +231,6 @@ export default async function DashboardPage() {
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <div className="text-2xl">📅</div>
                     <div>
                       <p
                         className="font-semibold text-sm"
@@ -255,7 +247,6 @@ export default async function DashboardPage() {
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <div className="text-2xl">💼</div>
                     <div>
                       <p
                         className="font-semibold text-sm"
