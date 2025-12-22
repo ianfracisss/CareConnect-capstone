@@ -38,7 +38,11 @@ export default function RegisterPage() {
             alt="CareConnect Logo"
             width={600}
             height={600}
-            style={{ objectFit: "contain" }}
+            style={{
+              objectFit: "contain",
+              filter: "var(--auth-image-filter)",
+              transition: "filter 0.3s",
+            }}
           />
         </div>
         <div>
