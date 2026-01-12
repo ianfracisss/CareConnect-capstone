@@ -159,7 +159,7 @@ export default function RegistrationForm() {
             id="schoolId"
             type="text"
             {...register("schoolId")}
-            placeholder="221-00761"
+            placeholder="221-01720"
             className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:border-transparent outline-none transition"
             style={{
               background: "var(--bg)",
