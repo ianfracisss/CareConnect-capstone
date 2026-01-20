@@ -2,7 +2,7 @@
 
 import { useTheme } from "next-themes"
 
-export function ThemeToggler() {
+export default function ThemeToggle() {
   const { theme, setTheme } = useTheme()
 
   return (

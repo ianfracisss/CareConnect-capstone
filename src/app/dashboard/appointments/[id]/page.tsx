@@ -205,7 +205,7 @@ export default function AppointmentDetailPage({ params }: PageProps) {
                 border: "1px solid var(--border-muted)",
               }}
             >
-              {appointment.psg_member.avatar_url && (
+              {appointment.psg_member?.avatar_url && (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={appointment.psg_member.avatar_url}
@@ -218,7 +218,7 @@ export default function AppointmentDetailPage({ params }: PageProps) {
                   className="font-semibold text-lg"
                   style={{ color: "var(--text)" }}
                 >
-                  {appointment.psg_member.full_name}
+                  {appointment.psg_member?.full_name}
                 </p>
               </div>
             </div>
