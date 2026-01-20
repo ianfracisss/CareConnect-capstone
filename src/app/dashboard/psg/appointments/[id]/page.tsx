@@ -230,11 +230,8 @@ export default function PSGAppointmentDetailPage({ params }: PageProps) {
     appointment.status === "scheduled" &&
     new Date(appointment.appointment_date) > new Date();
 
-  const canComplete =
-    appointment &&
-    appointment.status === "confirmed" &&
-    appointment.status !== "completed" &&
-    appointment.status !== "cancelled";
+  const canComplete = appointment && appointment.status === "confirmed";
+    
 
   const canCancel =
     appointment &&
